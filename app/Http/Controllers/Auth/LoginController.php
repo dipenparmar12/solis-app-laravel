@@ -18,7 +18,8 @@ class LoginController extends Controller
 {
   public function login(Request $request)
   {
-    $request->validate(['email' => 'required|string|email',
+    $request->validate([
+      'email' => 'required|string|email',
       'password' => 'required|string|min:6',
       'device_name' => 'string|nullable',
     ]);
@@ -42,5 +43,12 @@ class LoginController extends Controller
   public function me(Request $request)
   {
     return $request->user();
+  }
+
+  public function csrfCookie()
+  {
+    return response()->json([
+      'csrf_token' => csrf_token(),
+    ]);
   }
 }

@@ -9,10 +9,15 @@
 - make api controller `php artisan make:controller AuthApiController --api`
 - create db seed `php artisan make:seeder UserSeeder`
 
+### Setup Laravel API
+- In `.env` I have set **SESSION_DRIVER=cookie** and **SESSION_DOMAIN=localhost:8000**
+- In `config/sanctum` I have added **localhost:8000** to the stateful domains
+- In `config/cors` I have set **supports_credentials = true** and allowed all paths, headers and origins (using ‘*’ value)
+
+
 ## Temp
 - Create Everything `php artisan make:modal Temp -a`
 
 ## sources
-- https://stackoverflow.com/questions/36366727/how-do-you-force-a-json-response-on-every-response-in-laravel/64511200#64511200
-- https://mr-hr.medium.com/how-to-get-headers-in-laravel-41339a889f51
-- https://tallpad.com/series/laravel-misc/lessons/authenticate-mobile-applications-with-laravel-sanctum
+- https://laravel-news.com/using-sanctum-to-authenticate-a-react-spa
+- https://laravelquestions.com/2020/05/01/csrf-cookies-not-set-for-cross-domain-requests-using-laravel-sanctum-and-angular
