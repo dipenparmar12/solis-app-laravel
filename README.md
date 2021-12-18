@@ -2,12 +2,21 @@
 
 ### Start application 
 
-1. `php artisan migrate`
-2. `npm run start` or `php -S 127.0.0.1:8000 -t public/` or `php artisan serve`
+1. open `.env` edit environments variables 
+2. `php artisan migrate`
+3. `php artisan db:state:update` update production database state
+4. `npm run start` or `php -S 127.0.0.1:8000 -t public/` or `php artisan serve`
 
 ## Development 
 - make api controller `php artisan make:controller AuthApiController --api`
 - create db seed `php artisan make:seeder UserSeeder`
+
+### Wamp config
+1. Wamp -> `Localhost`
+2. `Add a Virtual Host`
+3. Name of the Virtual Host (No space - No underscore)
+4. Complete absolute path of the VirtualHost folder ex. `C:/projects/solis_app/solis_laravel/public`
+5. Right click wamp tray -> `Tools` -> `Restart DNS`
 
 ### Setup Laravel API
 - In `.env` I have set **SESSION_DRIVER=cookie** and **SESSION_DOMAIN=localhost:8000**

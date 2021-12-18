@@ -2,16 +2,38 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Scopes\IsActiveScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use Wildside\Userstamps\Userstamps;
+
+
+// use App\Observers\AuthUserCacheObserver;
+// use DateTimeInterface;
+// use Eloquent;
+// use Illuminate\Auth\Passwords\CanResetPassword;
+// use Illuminate\Database\Eloquent\Collection;
+// use Illuminate\Database\Query\Builder;
+// use Illuminate\Notifications\DatabaseNotification;
+// use Illuminate\Notifications\DatabaseNotificationCollection;
+// use Illuminate\Support\Carbon;
+// use Laravel\Sanctum\PersonalAccessToken;
+// use Spatie\Permission\Models\Permission;
+// use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
+    use
+        Notifiable,
+        SoftDeletes,
+        Userstamps,
+        HasRoles;
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -19,7 +41,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password',
-        'mobile', 'dob', 'pic', 'address',  'salary', 'role_id', 'doj', 'link',  "user_type",
+        'mobile', 'dob', 'pic', 'address', 'salary', 'role_id', 'doj', 'link', "user_type",
         'active',
         'is_abstract'
     ];
@@ -45,5 +67,10 @@ class User extends Authenticatable
     ];
 
     protected $dates = ['deleted_at', 'dob', 'doj'];
-    
+
+    public static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new IsActiveScope('users.active'));
+    }
 }
