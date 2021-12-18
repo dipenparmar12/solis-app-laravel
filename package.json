@@ -1,6 +1,8 @@
 {
     "private": true,
     "scripts": {
+        "start": "php -S 127.0.0.1:8000 -t public/",
+        "clear": "bash ./clear-laravel.sh",
         "dev": "npm run development",
         "development": "mix",
         "watch": "mix watch",
