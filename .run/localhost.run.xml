@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="localhost" type="PhpBuiltInWebServerConfigurationType" factoryName="PHP Built-in Web Server" document_root="$PROJECT_DIR$" port="8000">
+    <CommandLine parameters="-c C:\wamp64\bin\apache\apache2.4.51\bin\php.ini -t public/" />
+    <method v="2" />
+  </configuration>
+</component>

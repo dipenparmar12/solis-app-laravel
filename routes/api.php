@@ -1,8 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\UserApiController;
+use App\Models\User;
+use App\Scopes\IsActiveScope;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,5 +26,12 @@ Route::any('/me', [LoginController::class, 'me'])->name('me')->middleware('auth:
 
 // App routes
 Route::middleware('auth:sanctum')->group(function () {
-  // TODO:: Add routes here
+    Route::get('/users', [UserApiController::class, 'index'])->name('users.index');
+});
+
+
+Route::get('/test', function () {
+//    $data['roles'] = \Spatie\Permission\Models\Role::get();
+//    $data['permissions'] = \Spatie\Permission\Models\Permission::get();
+//    return $data;
 });
