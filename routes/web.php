@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Temp\TestController;
 use App\Http\Controllers\Utils\DatabaseStateController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,4 +19,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/db-state-update',DatabaseStateController::class);
+Route::get('/phpinfo', [TestController::class, 'phpinfo']);
+Route::get('/db-state-update', DatabaseStateController::class);
