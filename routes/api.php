@@ -2,9 +2,8 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Temp\TestController;
 use App\Http\Controllers\UserApiController;
-use App\Models\User;
-use App\Scopes\IsActiveScope;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,11 +26,10 @@ Route::any('/me', [LoginController::class, 'me'])->name('me')->middleware('auth:
 // App routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [UserApiController::class, 'index'])->name('users.index');
+    Route::get('/users/{id}', [UserApiController::class, 'show'])->name('users.show');
 });
 
 
-Route::get('/test', function () {
-//    $data['roles'] = \Spatie\Permission\Models\Role::get();
-//    $data['permissions'] = \Spatie\Permission\Models\Permission::get();
-//    return $data;
-});
+Route::get('/test', [TestController::class, 'get']);
+
+

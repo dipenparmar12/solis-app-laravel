@@ -22,4 +22,17 @@ class UserApiController extends Controller
     {
         return User::withoutGlobalScope(IsActiveScope::class)->paginate(30)->appends(request()->all());
     }
+
+
+    public function show($id)
+    {
+        $user = User::withoutGlobalScope(IsActiveScope::class)->findOrFail($id);
+        return $user;
+
+//        if (auth()->id() == $id or optional(auth()->user())->hasRole(['team', 'admin'])) {
+//            $data['model_data'] = User::withoutGlobalScope(IsActiveScope::class)->with('expenses', 'incomes')->findOrFail($id);
+//            return view('team.users.show')->with($data);
+//        }
+//        return redirect()->route('team.users.show', auth()->id());
+    }
 }

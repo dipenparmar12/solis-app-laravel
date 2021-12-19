@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Temp;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 
 class TestController extends Controller
 {
@@ -14,5 +14,11 @@ class TestController extends Controller
     {
         $test = 1;
         return phpinfo();
+    }
+
+    public function get()
+    {
+        $data = Permission::paginate(request('per_page') ?? 5)->appends(request()->all());
+        return $data;
     }
 }
