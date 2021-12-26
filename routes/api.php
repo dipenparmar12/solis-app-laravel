@@ -31,5 +31,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::get('/test', [TestController::class, 'get']);
+Route::get('/test/paginate', [TestController::class, 'paginateGet']);
 
 

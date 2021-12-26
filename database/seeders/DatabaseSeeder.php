@@ -50,14 +50,6 @@ class DatabaseSeeder extends Seeder
         $dipen->syncPermissions($permissions);
         $dipen->syncRoles($roles);
 
-        DB::table('users')->insert([
-            'name' => Str::random(10),
-            'email' => 'dipen@gmail.com',
-            'password' => Hash::make('Admin@123'),
-            'mobile' => 9898989 * rand(3, 8),
-            'salary' => 4000 * rand(2, 5),
-            'role_id' => random_int(0, 3),
-        ]);
     }
 
     // public function run()

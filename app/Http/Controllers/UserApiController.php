@@ -20,7 +20,11 @@ class UserApiController extends Controller
 
     public function index()
     {
-        return User::withoutGlobalScope(IsActiveScope::class)->paginate(30)->appends(request()->all());
+        $users = User::withoutGlobalScope(IsActiveScope::class)
+            ->paginate(request('per_page') ?? 20)
+            ->appends(request()->all());
+
+        return $this->res($users);
     }
 
 
