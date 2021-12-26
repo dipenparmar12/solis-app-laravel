@@ -1,11 +1,23 @@
 ## PHP Laravel Backend application
 
-### Start application 
+## Start application 
 
 1. open `.env` edit environments variables 
 2. `php artisan migrate`
 3. `php artisan db:state:update` update production database state
-4. `npm run start` or `php -S 127.0.0.1:8000 -t public/` or `php artisan serve`
+4. `npm run start` or `php -S 127.0.0.1:8000 -t public/`**** or `php artisan serve`
+
+
+## Production Heroku
+- Git **CLONE** or **LINK** repo
+   - Clone remove account `heroku git:clone -a herkou-app-name`
+   - Link local git account: `heroku git:remote -a herkou-app-name`
+- Push Updates: `git push heroku main:main` localBranch:herokuBranch
+- Heroku remove log: `heroku logs --tail --app heroku-app-name`
+- set config variables & generate key (using **.env.stating** example) :
+  - `php artisan key:generate` 
+  - `heroku config:set DB_DATABASE=dbName APP_KEY=appKey --app heroku-app-name`
+- Heroku remote bash/terminal: `heroku run bash`
 
 ## Development 
 - make api controller `php artisan make:controller AuthApiController --api`
@@ -71,3 +83,4 @@ xdebug.log_level=10
 
 - https://laravel-news.com/using-sanctum-to-authenticate-a-react-spa
 - https://laravelquestions.com/2020/05/01/csrf-cookies-not-set-for-cross-domain-requests-using-laravel-sanctum-and-angular
+- Heroku Accounts https://github.com/heroku/heroku-accounts

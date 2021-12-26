@@ -4,6 +4,8 @@
         "start": "php -S 127.0.0.1:8000 -t public/ -c C:\\wamp64\\bin\\apache\\apache2.4.51\\bin\\php.ini",
         "clear": "bash ./clear-laravel.sh",
         "dev": "npm run development",
+        "heroku:log": "heroku logs --tail --app solis-laravel-test",
+        "heroku:bash": "heroku run bash",
         "development": "mix",
         "watch": "mix watch",
         "watch-poll": "mix watch -- --watch-options-poll=1000",
