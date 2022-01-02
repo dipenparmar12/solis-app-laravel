@@ -19,6 +19,18 @@
   - `heroku config:set DB_DATABASE=dbName APP_KEY=appKey --app heroku-app-name`
 - Heroku remote bash/terminal: `heroku run bash`
 
+
+## Production to Hostinger
+- Make sure **php8.0** version default is set in [php configuration](https://hpanel.hostinger.com/hosting/solis-interiors.tk/advanced/php-configuration)
+
+- Installation via SSH 
+  - `ssh -p 65002 u454350797@156.67.222.43` & entry password your `***` 
+  - `cd domains/solis-interiors.tk/public_html/` & upload project source code
+  - `/opt/alt/php80/usr/bin/php composer.phar install` (here upload composer.phar file to current directory if not exits)
+  - Set `.env` variables.
+  - Setup is done
+
+
 ## Development 
 - make api controller `php artisan make:controller AuthApiController --api`
 - create db seed `php artisan make:seeder UserSeeder`
