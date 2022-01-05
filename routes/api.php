@@ -27,6 +27,7 @@ Route::any('/me', [LoginController::class, 'me'])->name('me')->middleware('auth:
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [UserApiController::class, 'index'])->name('users.index');
     Route::get('/users/{id}', [UserApiController::class, 'show'])->name('users.show');
+    Route::post('/users', [UserApiController::class, 'store'])->name('users.store');
 });
 
 
