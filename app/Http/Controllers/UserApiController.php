@@ -50,13 +50,30 @@ class UserApiController extends Controller
             'role' => "nullable|exists:roles,name",
             'mobile' => "required|numeric|digits_between:10,20",
             'salary' => "required|numeric|min:0",
-            "education" => "nullable|string",
+            'education' => "nullable|string",
             'dob' => "nullable|date", 'before:tomorrow', 'after:1900-01-01',
             'doj' => "nullable|date", 'before:tomorrow', 'after:2010-01-01',
             "active" => "nullable|in:0,1",
             "is_abstract" => "nullable|in,0,1",
         ]);
 
-        return $this->res(request()->all(), 'User Created Successfully');
+
+        try {
+            $user = User::create(request([
+                "name", "email", "password", "role",
+                "mobile", "salary", "education", "dob", "doj", "active", "is_abstract",
+                // "profile_pic",
+            ]));
+
+            if (request()->hasFile('profile_pic')) {
+                $user->addMedia(request()->file('profile_pic'))->toMediaCollection('profile_pic');
+            }
+
+            return $this->res(request()->all(), "User created successfully");
+        } catch (\Throwable $th) {
+            $user->delete();
+            //throw $th;
+            return $this->resError($th->getMessage());
+        }
     }
 }
