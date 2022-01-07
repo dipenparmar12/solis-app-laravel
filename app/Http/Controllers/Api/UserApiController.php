@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Scopes\IsActiveScope;
+use Illuminate\Support\Facades\Log;
 use function request;
 
 class UserApiController extends Controller
@@ -49,6 +50,7 @@ class UserApiController extends Controller
      */
     public function store(): \Illuminate\Http\JsonResponse
     {
+//        Log::info(request(['dob','doj']));
         $this->validate(request(), [
             'name' => "required|min:2|max:100",
             'email' => "email|required|unique:users,email",
@@ -58,12 +60,10 @@ class UserApiController extends Controller
             'mobile' => "required|numeric|digits_between:10,20",
             'salary' => "required|numeric|min:0",
             'education' => "nullable|string",
-            'dob' => "nullable|date", 'before:tomorrow', 'after:1900-01-01',
-            'doj' => "nullable|date", 'before:tomorrow', 'after:2010-01-01',
+            'dob' => 'date|before:tomorrow|nullable|date_format:Y-m-d',
+            'doj' => 'date|before:tomorrow|nullable',
             "active" => "nullable|in:0,1",
-            "is_abstract" => "nullable|in,0,1",
         ]);
-
 
         try {
             $user = User::create(request([

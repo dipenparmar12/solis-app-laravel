@@ -11,7 +11,7 @@ trait JsonResponseTrait
         $resData = [
             'success' => true,
             'statusCode' => 200,
-            'successMessage' => $message,
+            'message' => $message,
             'path' => '/' . request()->path(),
             'results' => $data ?? [],
             'metadata' => [
@@ -28,7 +28,7 @@ trait JsonResponseTrait
         $resData = [
             'success' => false,
             'statusCode' => 400,
-            'errorMessage' => $message,
+            'message' => $message,
             'path' => '/' . request()->path(),
             'results' => [],
             'errorLog' => $data ?? [],
@@ -37,6 +37,6 @@ trait JsonResponseTrait
                 'url' => request()->url()
             ],
         ];
-        return Response::json($resData);
+        return Response::json($resData, 400);
     }
 }
