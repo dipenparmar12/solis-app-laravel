@@ -56,7 +56,7 @@ class UserApiController extends Controller
             'email' => "email|required|unique:users,email",
             'password' => "nullable",  "min:3", // TODO:dev 
             'profile_pic' => "image|mimes:jpg,jpeg,png,svg,gif|max:1024",
-            'role' => "nullable|exists:roles,name",
+            'role_id' => "nullable|exists:roles,id",
             'mobile' => "required|numeric|digits_between:10,20",
             'salary' => "required|numeric|min:0",
             'education' => "nullable|string",
@@ -67,7 +67,7 @@ class UserApiController extends Controller
 
         try {
             $user = User::create(request([
-                "name", "email", "password", "role",// role_id
+                "name", "email", "password", "role_id",// role_id
                 "mobile", "salary", "education", "dob", "doj", "active", "is_abstract",
                 // "profile_pic",
             ]));

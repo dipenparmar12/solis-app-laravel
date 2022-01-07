@@ -28,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [UserApiController::class, 'index'])->name('users.index');
     Route::get('/users/{id}', [UserApiController::class, 'show'])->name('users.show');
     Route::post('/users', [UserApiController::class, 'store'])->name('users.store');
+
+    Route::get('/static/roles', [\App\Http\Controllers\Api\StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
 });
 
 
@@ -35,5 +37,6 @@ Route::get('/test', [TestController::class, 'get']);
 Route::get('/test/logout', [TestController::class, 'logout']);
 Route::get('/test/paginate', [TestController::class, 'paginateGet']);
 Route::get('/test/users/{id}', [TestController::class, 'userGet']);
+Route::get('/test/roles', [\App\Http\Controllers\Api\StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
 
 
