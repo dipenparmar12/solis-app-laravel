@@ -40,7 +40,7 @@ class CreateUsersTable extends Migration
             $table->unsignedInteger('deleted_by')->nullable();
             //            $table->foreign('deleted_by')->references('id')->on('users');
 
-            $table->string('pic')->default('profile_pic.png');
+            $table->string('pic')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

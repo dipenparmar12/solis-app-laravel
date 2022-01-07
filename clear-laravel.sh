@@ -8,7 +8,8 @@
 
 if [ $1 ] 
 then
-    php artisan clear-compiled && composer dumpauto 
+    php artisan clear-compiled && composer dumpauto && composer dump-autoload -o
+
 else
    echo "without composer dumpauto"
 fi

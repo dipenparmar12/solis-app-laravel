@@ -52,4 +52,15 @@ class TestController extends Controller
         return $this->res($data);
     }
 
+    public function userGet($id): \Illuminate\Http\JsonResponse
+    {
+        try {
+//            $data = User::findOrFail($id)->getMedia('avatars');
+            return $this->res(['Get modal image']);
+        } catch (Throwable $t) {
+            $error_msg = ['Line:' => $t->getLine(), 'Message:' => $t->getMessage(), 'Code:' => $t->getCode()];
+            Log::error($error_msg);
+            return $this->resError($error_msg, $t->getMessage());
+        }
+    }
 }

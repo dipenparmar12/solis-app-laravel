@@ -38,6 +38,7 @@ class User extends Authenticatable implements HasMedia
         HasRoles;
     use InteractsWithMedia;
 
+    const PIC_MEDIA_COLLECTION = 'avatars';
     
     /**
      * The attributes that are mass assignable.

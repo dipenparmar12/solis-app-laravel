@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\LogoutController;
+use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Temp\TestController;
-use App\Http\Controllers\UserApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,5 +34,6 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/test', [TestController::class, 'get']);
 Route::get('/test/logout', [TestController::class, 'logout']);
 Route::get('/test/paginate', [TestController::class, 'paginateGet']);
+Route::get('/test/users/{id}', [TestController::class, 'userGet']);
 
 

@@ -23,7 +23,7 @@ trait JsonResponseTrait
     }
 
 
-    public function resError($data, $message = 'Error'): \Illuminate\Http\JsonResponse
+    public function resError($data, $message = 'Something went wrong'): \Illuminate\Http\JsonResponse
     {
         $resData = [
             'success' => false,

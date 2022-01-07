@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Scopes\IsActiveScope;
-use Illuminate\Http\Request;
+use function request;
 
 class UserApiController extends Controller
 {
@@ -18,9 +19,11 @@ class UserApiController extends Controller
         $this->middleware('role:team|admin', ['only' => ['fund_expense_diff']]);
     }
 
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         $users = User::withoutGlobalScope(IsActiveScope::class)
+            ->latest()
+//            ->getMedia(User::PIC_MEDIA_COLLECTION)
             ->paginate(request('per_page') ?? 20)
             ->appends(request()->all());
 
@@ -40,7 +43,11 @@ class UserApiController extends Controller
         //        return redirect()->route('team.users.show', auth()->id());
     }
 
-    public function store()
+    /**
+     * Create new user.
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function store(): \Illuminate\Http\JsonResponse
     {
         $this->validate(request(), [
             'name' => "required|min:2|max:100",
@@ -60,13 +67,13 @@ class UserApiController extends Controller
 
         try {
             $user = User::create(request([
-                "name", "email", "password", "role",
+                "name", "email", "password", "role",// role_id
                 "mobile", "salary", "education", "dob", "doj", "active", "is_abstract",
                 // "profile_pic",
             ]));
 
             if (request()->hasFile('profile_pic')) {
-                $user->addMedia(request()->file('profile_pic'))->toMediaCollection('profile_pic');
+                $user->addMedia(request()->file('profile_pic'))->toMediaCollection(User::PIC_MEDIA_COLLECTION);
             }
 
             return $this->res(request()->all(), "User created successfully");
