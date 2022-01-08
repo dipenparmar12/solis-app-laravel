@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Scopes\IsActiveScope;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use function request;
 
 class UserApiController extends Controller
@@ -20,7 +22,7 @@ class UserApiController extends Controller
         $this->middleware('role:team|admin', ['only' => ['fund_expense_diff']]);
     }
 
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index(): JsonResponse
     {
         $users = User::withoutGlobalScope(IsActiveScope::class)
             ->latest()
@@ -32,11 +34,15 @@ class UserApiController extends Controller
     }
 
 
-    public function show($id)
+    /**
+     * Get details of the specified resource.
+     * @param $id // can be used direct implicit modal binding `User $user`
+     * @return JsonResponse
+     */
+    public function show($id): JsonResponse
     {
         $user = User::withoutGlobalScope(IsActiveScope::class)->findOrFail($id);
         return $user;
-
         //        if (auth()->id() == $id or optional(auth()->user())->hasRole(['team', 'admin'])) {
         //            $data['model_data'] = User::withoutGlobalScope(IsActiveScope::class)->with('expenses', 'incomes')->findOrFail($id);
         //            return view('team.users.show')->with($data);
@@ -48,13 +54,13 @@ class UserApiController extends Controller
      * Create new user.
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(): \Illuminate\Http\JsonResponse
+    public function store(): JsonResponse
     {
 //        Log::info(request(['dob','doj']));
         $this->validate(request(), [
             'name' => "required|min:2|max:100",
             'email' => "email|required|unique:users,email",
-            'password' => "nullable",  "min:3", // TODO:dev 
+            'password' => "nullable", "min:3", // TODO:dev
             'profile_pic' => "image|mimes:jpg,jpeg,png,svg,gif|max:1024",
             'role_id' => "nullable|exists:roles,id",
             'mobile' => "required|numeric|digits_between:10,20",
@@ -63,24 +69,99 @@ class UserApiController extends Controller
             'dob' => 'date|before:tomorrow|nullable|date_format:Y-m-d',
             'doj' => 'date|before:tomorrow|nullable',
             "active" => "nullable|in:0,1",
+            'address' => 'nullable|min:5|max:1000',
         ]);
 
+        $user = null;
         try {
             $user = User::create(request([
-                "name", "email", "password", "role_id",// role_id
+                "name", "email", "password", "role_id",
                 "mobile", "salary", "education", "dob", "doj", "active", "is_abstract",
-                // "profile_pic",
+                'address', // "profile_pic",
             ]));
 
             if (request()->hasFile('profile_pic')) {
                 $user->addMedia(request()->file('profile_pic'))->toMediaCollection(User::PIC_MEDIA_COLLECTION);
             }
 
+            $user->password = Hash::make(request('password'));
+            $user->save();
+
             return $this->res(request()->all(), "User created successfully");
         } catch (\Throwable $th) {
-            $user->delete();
             //throw $th;
+            optional($user)->delete();
             return $this->resError($th->getMessage());
         }
     }
+
+
+    /**
+     * Update the specified resource
+     *
+     * @param Request $request
+     * @param User $user
+     * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function update(Request $request, User $user): JsonResponse
+    {
+        $this->validate(request(), [
+            'name' => 'required|min:2|max:100',
+            'email' => "email|required|unique:users,email,$user->id",
+            'password' => 'nullable', 'min:3', // TODO:dev
+            'profile_pic' => 'image|mimes:jpg,jpeg,png,svg,gif|max:1024',
+            'role_id' => 'nullable|exists:roles,id',
+            'mobile' => 'required|numeric|digits_between:10,20',
+            'salary' => 'required|numeric|min:0',
+            'education' => 'nullable|string',
+            'dob' => 'date|before:tomorrow|nullable|date_format:Y-m-d',
+            'doj' => 'date|before:tomorrow|nullable',
+            'active' => 'nullable|in:0,1',
+            'address' => 'nullable|min:5|max:1000',
+        ]);
+
+        try {
+            $update_payload = request([
+                'name', 'email', 'role_id',// role_id
+                'mobile', 'salary', 'education', 'dob', 'doj', 'active', 'is_abstract',
+                "address", // "profile_pic",
+            ]);
+
+
+            if ($user->update($update_payload)) {
+
+                if ($password = request()->get('password')) {
+                    $user->password = Hash::make($password);
+                    $user->save();
+                }
+
+                return $this->res($user, 'User updated successfully');
+            }
+
+            return $this->resError($user, 'Something want to wrong, Please try again');
+
+        } catch (\Throwable $th) {
+            return $this->resError($th->getMessage());
+        }
+
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(User $user): JsonResponse
+    {
+        try {
+            $user->delete();
+            return $this->res($user, 'User deleted successfully');
+        } catch (\Throwable $th) {
+            return $this->resError($th->getMessage());
+        }
+    }
+
 }

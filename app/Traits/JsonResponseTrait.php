@@ -31,7 +31,7 @@ trait JsonResponseTrait
             'message' => $message,
             'path' => '/' . request()->path(),
             'results' => [],
-            'errorLog' => $data ?? [],
+            'data' => $data ?? [],
             'metadata' => [
                 'auth_id' => auth()->id(),
                 'url' => request()->url()
