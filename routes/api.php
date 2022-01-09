@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
+use App\Http\Controllers\Api\ProjectApiController;
+use App\Http\Controllers\Api\StaticDataApiController;
 use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Temp\TestController;
 use Illuminate\Support\Facades\Route;
@@ -25,12 +27,23 @@ Route::any('/me', [LoginController::class, 'me'])->name('me')->middleware('auth:
 
 // App routes
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/static/roles', [StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
+    Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes'])->name('api.static.property_types');
+
+    // Users
     Route::get('/users', [UserApiController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserApiController::class, 'show'])->name('users.show');
     Route::post('/users', [UserApiController::class, 'store'])->name('users.store');
     Route::put('/users/{any_user}', [UserApiController::class, 'update'])->name('users.update');
 
-    Route::get('/static/roles', [\App\Http\Controllers\Api\StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
+
+    // Project
+    Route::get('/projects', [ProjectApiController::class, 'index'])->name('project.index');
+//    Route::get('/projects/{project}', [ProjectApiController::class, 'show'])->name('project.show');
+    Route::post('/projects', [ProjectApiController::class, 'store'])->name('project.store');
+    Route::put('/projects/{project}', [ProjectApiController::class, 'update'])->name('project.update');
+
+
 });
 
 
@@ -38,6 +51,9 @@ Route::get('/test', [TestController::class, 'get']);
 Route::get('/test/logout', [TestController::class, 'logout']);
 Route::get('/test/paginate', [TestController::class, 'paginateGet']);
 Route::get('/test/users/{id}', [TestController::class, 'userGet']);
-Route::get('/test/roles', [\App\Http\Controllers\Api\StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
+Route::get('/test/roles', [StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
 
+
+Route::get('/test/projects', [ProjectApiController::class, 'index']);
+Route::post('/test/projects', [ProjectApiController::class, 'store']);
 

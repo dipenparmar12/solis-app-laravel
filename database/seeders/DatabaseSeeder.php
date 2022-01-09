@@ -6,9 +6,7 @@ use App\Console\Commands\EnsureDatabaseState;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -22,6 +20,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Artisan::call(EnsureDatabaseState::class); // db:state:update
+
+        $this->call([
+//            UserSeeder::class,
+            ProjectSeeder::class,
+        ]);
 
         foreach (['dipensavji'] as $user) {
             $user = User::create([
