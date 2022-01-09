@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -35,6 +36,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // @src: https://laracasts.com/discuss/channels/laravel/using-route-model-binding-without-global-scope
+        Route::bind('any_user', function($id) {
+            return User::withoutGlobalScopes()->findOrFail($id);
+        });
+
         $this->configureRateLimiting();
 
         $this->routes(function () {

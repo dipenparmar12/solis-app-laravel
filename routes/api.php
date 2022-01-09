@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [UserApiController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserApiController::class, 'show'])->name('users.show');
     Route::post('/users', [UserApiController::class, 'store'])->name('users.store');
-    Route::put('/users/{user}', [UserApiController::class, 'update'])->name('users.update');
+    Route::put('/users/{any_user}', [UserApiController::class, 'update'])->name('users.update');
 
     Route::get('/static/roles', [\App\Http\Controllers\Api\StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
 });
