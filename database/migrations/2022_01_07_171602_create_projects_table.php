@@ -9,7 +9,7 @@ class CreateProjectsTable extends Migration
     public function up()
     {
         Schema::create('projects', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('client')->default('Compnay Client');
             $table->string('title')->nullable(false)->unique(); // SiteName LakeSide Habitet
             $table->bigInteger('budget')->default(0);// 300k

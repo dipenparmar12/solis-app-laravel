@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\FundApiController;
 use App\Http\Controllers\Api\ProjectApiController;
 use App\Http\Controllers\Api\StaticDataApiController;
 use App\Http\Controllers\Temp\TestController;
-use App\Http\Controllers\Utils\DatabaseStateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,9 +17,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('', [TestController::class, 'get']);
+Route::get('/logout', [TestController::class, 'logout']);
+Route::get('/paginate', [TestController::class, 'paginateGet']);
+Route::get('/users/{id}', [TestController::class, 'userGet']);
+Route::get('/roles', [StaticDataApiController::class, 'getRoles']);
+Route::get('/projects', [ProjectApiController::class, 'index']);
+Route::post('/projects', [ProjectApiController::class, 'store']);
+Route::get('/transactions', [StaticDataApiController::class, 'getTransactions']);
+Route::get('/funds', [FundApiController::class, 'index']);
 
-Route::get('/phpinfo', [TestController::class, 'phpinfo']);
-Route::get('/db-state-update', DatabaseStateController::class);

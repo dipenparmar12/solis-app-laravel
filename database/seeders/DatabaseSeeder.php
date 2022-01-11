@@ -22,36 +22,17 @@ class DatabaseSeeder extends Seeder
         Artisan::call(EnsureDatabaseState::class); // db:state:update
 
         $this->call([
-//            UserSeeder::class,
+            UserSeeder::class,
             ProjectSeeder::class,
+            TransactionSeeder::class,
+            FundSeeder::class,
         ]);
 
-        foreach (['dipensavji'] as $user) {
-            $user = User::create([
-                'name' => $user,
-                'email' => $user . '@gmail.com',
-                'password' => Hash::make('Admin@123'),
-                // 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-                'mobile' => 9898989 * rand(3, 8),
-                'salary' => 4000 * rand(2, 5),
-                'dob' => now(),
-                'doj' => now(),
-                'address' => 'Permanent Address of Users is ...',
-                'pic' => 'img/profile_pic.png',
-                'role_id' => random_int(0, 3),
-                'link' => "www.facebook.com/dipen.parmar.186"
-            ]);
-            // for ($i = 0, $iMax = random_int(1, 4); $i <= $iMax; $i++) {
-            //     $user->assignRole(['team', Role::orderByRaw('RAND()')->first()->name]);
-            // }
-        }
-
-        $permissions = Permission::pluck('name')->toArray();
-        $roles = Role::pluck('name')->toArray();
-
-        $dipen = User::findOrFail(1);
-        $dipen->syncPermissions($permissions);
-        $dipen->syncRoles($roles);
+//        $permissions = Permission::pluck('name')->toArray();
+//        $roles = Role::pluck('name')->toArray();
+//        $user = User::findOrFail(1);
+//        $user->syncPermissions($permissions);
+//        $user->syncRoles($roles);
 
     }
 

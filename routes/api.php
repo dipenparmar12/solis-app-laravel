@@ -2,11 +2,11 @@
 
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
+use App\Http\Controllers\Api\FundApiController;
 use App\Http\Controllers\Api\ProjectApiController;
 use App\Http\Controllers\Api\StaticDataApiController;
 use App\Http\Controllers\Api\TransactionApiController;
 use App\Http\Controllers\Api\UserApiController;
-use App\Http\Controllers\Temp\TestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,6 +32,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes'])->name('api.static.property_types');
     Route::get('/static/transactions', [StaticDataApiController::class, 'getTransactions'])->name('api.static.transactions');
 
+    // Funds
+    Route::get('/funds', [FundApiController::class, 'index'])->name('funds.index');
+//    Route::get('/funds/{fund}', [FundApiController::class, 'show'])->name('funds.show');
+//    Route::post('/funds', [FundApiController::class, 'store'])->name('funds.store');
+//    Route::put('/funds/{funds}', [FundApiController::class, 'update'])->name('funds.update');
+
+
     // Users
     Route::get('/users', [UserApiController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserApiController::class, 'show'])->name('users.show');
@@ -39,31 +46,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/users/{any_user}', [UserApiController::class, 'update'])->name('users.update');
 
 
-    // Project
-    Route::get('/projects', [ProjectApiController::class, 'index'])->name('project.index');
-//    Route::get('/projects/{project}', [ProjectApiController::class, 'show'])->name('project.show');
-    Route::post('/projects', [ProjectApiController::class, 'store'])->name('project.store');
-    Route::put('/projects/{project}', [ProjectApiController::class, 'update'])->name('project.update');
+    // Projects
+    Route::get('/projects', [ProjectApiController::class, 'index'])->name('projects.index');
+    Route::post('/projects', [ProjectApiController::class, 'store'])->name('projects.store');
+    Route::put('/projects/{project}', [ProjectApiController::class, 'update'])->name('projects.update');
+//    Route::get('/projects/{project}', [ProjectApiController::class, 'show'])->name('projects.show');
 
 
-    // Project
-    Route::get('/transactions', [TransactionApiController::class, 'index'])->name('project.index');
-    Route::post('/transactions', [TransactionApiController::class, 'store'])->name('project.store');
-    Route::put('/transactions/{transaction}', [TransactionApiController::class, 'update'])->name('project.update');
-//    Route::get('/transactions/{transaction}', [ProjectApiController::class, 'show'])->name('project.show');
+    // Transactions
+    Route::get('/transactions', [TransactionApiController::class, 'index'])->name('transactions.index');
+    Route::post('/transactions', [TransactionApiController::class, 'store'])->name('transactions.store');
+    Route::put('/transactions/{transaction}', [TransactionApiController::class, 'update'])->name('transactions.update');
+//    Route::get('/transactions/{transaction}', [ProjectApiController::class, 'show'])->name('transactions.show');
 
 });
 
-
-Route::get('/test', [TestController::class, 'get']);
-Route::get('/test/logout', [TestController::class, 'logout']);
-Route::get('/test/paginate', [TestController::class, 'paginateGet']);
-Route::get('/test/users/{id}', [TestController::class, 'userGet']);
-Route::get('/test/roles', [StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
-
-
-Route::get('/test/projects', [ProjectApiController::class, 'index']);
-Route::post('/test/projects', [ProjectApiController::class, 'store']);
-
-Route::get('/test/transactions', [StaticDataApiController::class, 'getTransactions'])->name('api.static.transactions');
-
+// Test routes
+Route::group(['prefix' => 'test'], function () {
+    return include(base_path('routes/test.php'));
+});
