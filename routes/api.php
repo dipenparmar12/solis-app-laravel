@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\ProjectApiController;
 use App\Http\Controllers\Api\StaticDataApiController;
+use App\Http\Controllers\Api\TransactionApiController;
 use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Temp\TestController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,7 @@ Route::any('/me', [LoginController::class, 'me'])->name('me')->middleware('auth:
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/static/roles', [StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
     Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes'])->name('api.static.property_types');
+    Route::get('/static/transactions', [StaticDataApiController::class, 'getTransactions'])->name('api.static.transactions');
 
     // Users
     Route::get('/users', [UserApiController::class, 'index'])->name('users.index');
@@ -44,6 +46,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/projects/{project}', [ProjectApiController::class, 'update'])->name('project.update');
 
 
+    // Project
+    Route::get('/transactions', [TransactionApiController::class, 'index'])->name('project.index');
+    Route::post('/transactions', [TransactionApiController::class, 'store'])->name('project.store');
+    Route::put('/transactions/{transaction}', [TransactionApiController::class, 'update'])->name('project.update');
+//    Route::get('/transactions/{transaction}', [ProjectApiController::class, 'show'])->name('project.show');
+
 });
 
 
@@ -56,4 +64,6 @@ Route::get('/test/roles', [StaticDataApiController::class, 'getRoles'])->name('a
 
 Route::get('/test/projects', [ProjectApiController::class, 'index']);
 Route::post('/test/projects', [ProjectApiController::class, 'store']);
+
+Route::get('/test/transactions', [StaticDataApiController::class, 'getTransactions'])->name('api.static.transactions');
 
