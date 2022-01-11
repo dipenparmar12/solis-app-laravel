@@ -13,7 +13,7 @@ class ProjectApiController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * @see https://stackoverflow.com/a/48091600/8592918
      */
     public function index(): JsonResponse
     {
@@ -34,9 +34,20 @@ class ProjectApiController extends Controller
         ])
 //            ->when(!auth()->user()->hasPermissionTo('project-list-all'), function ($query) {
 //                return auth()->user()->hasPermissionTo('project-list-finish') ? $query->whereWip(0) : $query->whereWip(1);
-//            })->when(is_numeric(request('wip')), function ($query) {
-//                $query->where('wip', request('wip') == 0 ? 0 : 1);
 //            })
+
+            // /* filters & search queries */
+            ->where(function ($qry) {
+                $qry->when(is_numeric(request('wip')), function ($query) {
+                    $query->where('wip', request('wip') == 0 ? 0 : 1);
+                });
+                $qry->when(request('title'), function ($qry, $v) {
+                    $qry->where('title', 'like', '%' . request('title') . '%');
+                });
+                $qry->when(request('client'), function ($qry, $v) {
+                    $qry->where('client', 'like', '%' . request('client') . '%');
+                });
+            })
             ->latest()
             ->paginate(request('per_page') ?? 50)
             ->appends(request()->all());
