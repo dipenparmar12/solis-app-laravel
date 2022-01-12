@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Fund;
 use App\Scopes\OrderByScope;
 use Illuminate\Http\JsonResponse;
+use Facades\App\Services\QueryStrService;
 
 class FundApiController extends Controller
 {
@@ -32,7 +33,38 @@ class FundApiController extends Controller
             return $qry->where('user_id', auth()->id());
         })
             ->with(['given_to', 'received_from', 'project', 'transaction'])
-            ->paginate(request('per_page') ?? 50)
+            /* Filters */
+            ->where(function ($qry) {
+                $qry->when(request('from_date'), function ($qry) {
+                    $qry->whereDate('funds.date', '>=', request('from_date'));
+                });
+                $qry->when(request('to_date'), function ($qry) {
+                    $qry->whereDate('funds.date', '<=', request('to_date'));
+                });
+
+//                $qry->when(request('amount_min'), function ($query) {
+//                    $query->where('funds.amount', '>=', request('amount_min'));
+//                })
+//                $qry->when(request('amount_max'), function ($query) {
+//                    $query->where('funds.amount', '<=', request('amount_max'));
+//                })
+//                $qry->when(request()->has('user_ids'), function ($qry) {
+//                    $qry->whereIn('funds.user_id', request('user_ids'));
+//                })
+            })
+            /* Filters END */
+
+            /* Dynamic Order By -amount->desc, amount->acs */
+            ->when(count($orderByPairs = QueryStrService::getOrderBy(Fund::class)) ?? 0, function ($qry) use ($orderByPairs) {
+                $orderByPairs->each(function ($pair) use ($qry) {
+                    if ($pair && count($pair)) {
+                        // Use the 'splat' to turn the pair into two arguments
+                        $qry->orderBy(...$pair);
+                    }
+                });
+            })
+            ->orderBy('transaction_id' )
+            ->paginate(request('per_page') ?? 20)
             ->appends(request()->all());
 
         return $this->res($data);

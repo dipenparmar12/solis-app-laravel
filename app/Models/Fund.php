@@ -15,6 +15,7 @@ class Fund extends Model
     use HasFactory, SoftDeletes;
     use Userstamps;
 
+
     public const DAYS = 2;
     public const CACHE_TTL = self::DAYS * (24 * 60 * 60); // Cache time-to-live
 
@@ -23,6 +24,13 @@ class Fund extends Model
         'amount', 'date',
         'status',
         'pic',
+    ];
+
+    public const ORDERS_BY_ALLOWED = [
+        'id',
+        'amount', 'date',
+        'user_id', 'transaction_id', 'project_id',
+        'created_by'
     ];
 
     protected $hidden = [

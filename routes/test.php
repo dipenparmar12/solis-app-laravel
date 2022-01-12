@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\FundApiController;
 use App\Http\Controllers\Api\ProjectApiController;
 use App\Http\Controllers\Api\StaticDataApiController;
 use App\Http\Controllers\Temp\TestController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// TODO::REMOVE DEV ONLY
+if (app()->environment() === 'local' &&  env('AUTH_AUTO_LOGIN')) {
+    Auth::loginUsingId(env('AUTH_AUTO_LOGIN'));
+}
 
 Route::get('', [TestController::class, 'get']);
 Route::get('/logout', [TestController::class, 'logout']);
