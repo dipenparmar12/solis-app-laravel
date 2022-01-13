@@ -30,6 +30,7 @@ Route::any('/me', [LoginController::class, 'me'])->name('me')->middleware('auth:
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/static/roles', [StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
     Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes'])->name('api.static.property_types');
+    Route::get('/static/users', [StaticDataApiController::class, 'getUsers'])->name('api.static.users');
     Route::get('/static/transactions', [StaticDataApiController::class, 'getTransactions'])->name('api.static.transactions');
 
     // Funds

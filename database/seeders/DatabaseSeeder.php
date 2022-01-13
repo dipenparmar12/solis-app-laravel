@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use App\Console\Commands\EnsureDatabaseState;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         Artisan::call(EnsureDatabaseState::class); // db:state:update
 
         $this->call([
+            RolesSeeder::class,
             UserSeeder::class,
             ProjectSeeder::class,
             TransactionSeeder::class,

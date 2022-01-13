@@ -41,16 +41,16 @@ class FundApiController extends Controller
                 $qry->when(request('to_date'), function ($qry) {
                     $qry->whereDate('funds.date', '<=', request('to_date'));
                 });
-
+                $qry->when(is_array(request('user_ids')) , function ($qry) {
+                    // count(request('user_ids')
+                    $qry->whereIn('funds.user_id', request('user_ids'));
+                });
 //                $qry->when(request('amount_min'), function ($query) {
 //                    $query->where('funds.amount', '>=', request('amount_min'));
-//                })
+//                });
 //                $qry->when(request('amount_max'), function ($query) {
 //                    $query->where('funds.amount', '<=', request('amount_max'));
-//                })
-//                $qry->when(request()->has('user_ids'), function ($qry) {
-//                    $qry->whereIn('funds.user_id', request('user_ids'));
-//                })
+//                });
             })
             /* Filters END */
 
