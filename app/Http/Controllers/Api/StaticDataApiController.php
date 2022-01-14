@@ -10,6 +10,11 @@ use Spatie\Permission\Models\Role;
 
 class StaticDataApiController extends Controller
 {
+    public function empty(): JsonResponse
+    {
+        return $this->res('');
+    }
+
     public function getRoles(): JsonResponse
     {
         $roles = Role::get();
@@ -22,8 +27,8 @@ class StaticDataApiController extends Controller
             'Apartment',
             'Residential',
             'Commercial',
-            '2bhk',
-            '3bhk',
+            'Penthouse',
+//            '2bhk',
             'Other'
         ];
         return $this->res($roles);

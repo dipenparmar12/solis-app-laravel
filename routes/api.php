@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\FundApiController;
 use App\Http\Controllers\Api\ProjectApiController;
+use App\Http\Controllers\Api\SalaryApiController;
 use App\Http\Controllers\Api\StaticDataApiController;
 use App\Http\Controllers\Api\TransactionApiController;
 use App\Http\Controllers\Api\UserApiController;
@@ -28,6 +29,7 @@ Route::any('/me', [LoginController::class, 'me'])->name('me')->middleware('auth:
 
 // App routes
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/static/empty', [StaticDataApiController::class, 'empty'])->name('api.static.empty');
     Route::get('/static/roles', [StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
     Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes'])->name('api.static.property_types');
     Route::get('/static/users', [StaticDataApiController::class, 'getUsers'])->name('api.static.users');
@@ -60,6 +62,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/transactions/{transaction}', [TransactionApiController::class, 'update'])->name('transactions.update');
 //    Route::get('/transactions/{transaction}', [ProjectApiController::class, 'show'])->name('transactions.show');
 
+    // salaries
+    Route::get('/salaries', [SalaryApiController::class, 'index'])->name('api.salaries.get');
+
+    // advances
+    Route::get('/advances', [UserApiController::class, 'index'])->name('api.advances.get');
 });
 
 // Test routes

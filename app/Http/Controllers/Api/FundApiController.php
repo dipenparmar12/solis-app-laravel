@@ -65,7 +65,7 @@ class FundApiController extends Controller
                 });
             })
             ->orderBy('transaction_id' )
-            ->paginate(request('per_page') ?? 20)
+            ->paginate(QueryStrService::determinePerPageRows())
             ->appends(request()->all());
 
         return $this->res($data);
