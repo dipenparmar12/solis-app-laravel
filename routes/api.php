@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdvanceApiController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\FundApiController;
@@ -66,7 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/salaries', [SalaryApiController::class, 'index'])->name('api.salaries.get');
 
     // advances
-    Route::get('/advances', [UserApiController::class, 'index'])->name('api.advances.get');
+    Route::get('/advances', [AdvanceApiController::class, 'index'])->name('api.advances.get');
 });
 
 // Test routes

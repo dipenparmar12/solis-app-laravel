@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdvanceApiController;
 use App\Http\Controllers\Api\FundApiController;
 use App\Http\Controllers\Api\ProjectApiController;
 use App\Http\Controllers\Api\StaticDataApiController;
@@ -32,6 +33,7 @@ Route::get('/projects', [ProjectApiController::class, 'index']);
 Route::post('/projects', [ProjectApiController::class, 'store']);
 Route::get('/transactions', [StaticDataApiController::class, 'getTransactions']);
 Route::get('/funds', [FundApiController::class, 'index']);
+Route::get('/advances', [AdvanceApiController::class, 'index']);
 
 Route::get('/static/roles', [StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
 Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes'])->name('api.static.property_types');

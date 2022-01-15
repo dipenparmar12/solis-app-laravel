@@ -33,7 +33,7 @@ class SalaryApiController extends Controller
         try {
             // dump($request->all());
             $this->validate(request(), [
-                'user_ids' => 'sometimes|array',
+                'user_ids' => 'sometimes',
                 'user_ids.*' => 'sometimes|integer|exists:users,id',
                 'amount_min' => 'nullable|sometimes|numeric|min:0|max:1000000',
                 'amount_max' => 'nullable|sometimes|numeric|min:0|max:1000000',

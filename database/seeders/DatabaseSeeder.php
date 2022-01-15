@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             TransactionSeeder::class,
             FundSeeder::class,
+            AdvanceSeeder::class,
         ]);
 
 //        $permissions = Permission::pluck('name')->toArray();

@@ -2,18 +2,20 @@
 
 namespace Database\Seeders;
 
-use App\Models\Fund;
+use App\Models\Advance;
+use Exception;
 use Illuminate\Database\Seeder;
 
-class FundSeeder extends Seeder
+class AdvanceSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      *
      * @return void
+     * @throws Exception
      */
     public function run()
     {
-        Fund::factory()->count(rand(150,700))->create();
+        Advance::factory()->count(rand(150, 400))->create();
     }
 }
