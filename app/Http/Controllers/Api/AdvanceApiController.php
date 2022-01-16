@@ -8,8 +8,11 @@ use App\Http\Requests\UpdateAdvanceRequest;
 use App\Models\Advance;
 use Facades\App\Services\QueryStrService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
 
 class AdvanceApiController extends Controller
@@ -48,6 +51,7 @@ class AdvanceApiController extends Controller
                 ->select([
                     '*',
                     // "user_id", "amount", "date", "paid_amount", "settled", 'emi_info'
+                    // "emi_info as subRows"
                 ])
                 /* User Permission filter */
                 ->when(!auth()->user()->hasAnyPermission('advance-list-all'), function ($qry) {
@@ -64,26 +68,16 @@ class AdvanceApiController extends Controller
                 })
                 /* Filters */
                 ->where(function ($qry) {
-                    $qry
-                        ->when(request()->has('user_ids'), function ($qry) {
-                            $qry->whereIn('advances.user_id', request()->get('user_ids'));
-                        })
-                        ->when(request('from_date'), function ($query) {
-                            $query->whereDate('advances.date', '>=', request('from_date'));
-                        })
-                        ->when(request('to_date'), function ($query) {
-                            $query->whereDate('advances.date', '<=', request('to_date'));
-                        })
-                        ->when(request('amount_min'), function ($query) {
-                            $query->where('advances.amount', '>=', request('amount_min'));
-                        })
-                        ->when(request('amount_max'), function ($query) {
-                            $query->where('advances.amount', '<=', request('amount_max'));
-                        });
+                    return $this->advance_filters($qry);
                 })
                 /* Filters END */
                 ->paginate(QueryStrService::determinePerPageRows())
                 ->appends(request()->all());
+
+//            $advances->getCollection()->transform(function ($item) {
+//                $item->subRows = $item->emi_info;
+//                return $item;
+//            });
 
             return $this->res($advances, 'Your request processed successfully.');
         } catch (Throwable $t) {
@@ -92,23 +86,87 @@ class AdvanceApiController extends Controller
 
     }
 
+
+    /**
+     * Validation available at StoreAdvanceRequest Class
+     * Store a newly created resource in storage.
+     * @param StoreAdvanceRequest $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function store(StoreAdvanceRequest $request): JsonResponse
+    {
+        $new_advance = new Advance();
+        $new_advance->user_id = request()->get('user_id');
+        $new_advance->amount = request()->get('advance_amount');
+        $new_advance->date = request()->get('date');
+        $new_advance->save();
+        return $this->res($new_advance, 'Advance created successfully.');
+    }
+
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function advance_summary(Request $request)
+    {
+        try {
+            $advances = Advance::
+            /* User Permission filter */
+            when(!auth()->user()->hasAnyPermission('advance-list-all'), function ($qry) {
+                return $qry->where('advances.user_id', auth()->id());
+            })
+                ->where('settled', 0) // 0 = not settled yet
+                ->selectRaw("COALESCE(sum(amount), 0) as 'taken'")
+                ->selectRaw("COALESCE(sum(paid_amount), 0) as 'paid'")
+                ->selectRaw("COALESCE(sum(amount), 0)-COALESCE(sum(paid_amount), 0) as 'outstanding'")
+                ->groupBy('advances.user_id')
+                //
+                ->leftJoin('users', 'users.id', '=', 'advances.user_id')
+                ->addSelect('advances.user_id')
+                ->addSelect('users.name as username')
+                ->orderBy('advances.user_id')
+                ->get();
+
+            return $this->res($advances, 'Your request processed successfully.');
+        } catch (Throwable $t) {
+            return $this->resError([], $t->getMessage());
+        }
+    }
+
+    /**
+     * @param $qry
+     * @return mixed
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function advance_filters($qry)
+    {
+        return $qry
+            ->when(request()->has('user_ids'), function ($qry) {
+                $qry->whereIn('advances.user_id', request()->get('user_ids'));
+            })
+            ->when(request('from_date'), function ($query) {
+                $query->whereDate('advances.date', '>=', request('from_date'));
+            })
+            ->when(request('to_date'), function ($query) {
+                $query->whereDate('advances.date', '<=', request('to_date'));
+            })
+            ->when(request('amount_min'), function ($query) {
+                $query->where('advances.amount', '>=', request('amount_min'));
+            })
+            ->when(request('amount_max'), function ($query) {
+                $query->where('advances.amount', '<=', request('amount_max'));
+            });
+    }
+
 //    /**
 //     * Show the form for creating a new resource.
 //     *
 //     * @return \Illuminate\Http\Response
 //     */
 //    public function create()
-//    {
-//        //
-//    }
-//
-//    /**
-//     * Store a newly created resource in storage.
-//     *
-//     * @param  \App\Http\Requests\StoreAdvanceRequest  $request
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function store(StoreAdvanceRequest $request)
 //    {
 //        //
 //    }

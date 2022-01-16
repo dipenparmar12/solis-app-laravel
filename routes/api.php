@@ -49,6 +49,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/users', [UserApiController::class, 'store'])->name('users.store');
     Route::put('/users/{any_user}', [UserApiController::class, 'update'])->name('users.update');
 
+    /* User Advances */
+    Route::get('/users/{user}/advances', [UserApiController::class, 'advances'])->name('api.users.advances');
+
 
     // Projects
     Route::get('/projects', [ProjectApiController::class, 'index'])->name('projects.index');
@@ -61,13 +64,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/transactions', [TransactionApiController::class, 'index'])->name('transactions.index');
     Route::post('/transactions', [TransactionApiController::class, 'store'])->name('transactions.store');
     Route::put('/transactions/{transaction}', [TransactionApiController::class, 'update'])->name('transactions.update');
-//    Route::get('/transactions/{transaction}', [ProjectApiController::class, 'show'])->name('transactions.show');
+    // Route::get('/transactions/{transaction}', [ProjectApiController::class, 'show'])->name('transactions.show');
 
     // salaries
     Route::get('/salaries', [SalaryApiController::class, 'index'])->name('api.salaries.get');
 
     // advances
     Route::get('/advances', [AdvanceApiController::class, 'index'])->name('api.advances.get');
+    Route::get('/advance_summary', [AdvanceApiController::class, 'advance_summary'])->name('api.advances.summary');
+    Route::post('/advances', [AdvanceApiController::class, 'store'])->name('api.advances.store');
 });
 
 // Test routes

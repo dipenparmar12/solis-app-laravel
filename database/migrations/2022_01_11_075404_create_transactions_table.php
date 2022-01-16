@@ -18,7 +18,7 @@ class CreateTransactionsTable extends Migration
 
             $table->string('type')->nullable(false)->unique();
             $table->string('desc')->nullable();
-            $table->tinyInteger('active')->nullable()->default(1);
+            // $table->tinyInteger('active')->nullable()->default(1);
 
             /// created,updated,Delete By
             $table->unsignedInteger('updated_by')->nullable();

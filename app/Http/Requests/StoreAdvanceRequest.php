@@ -11,9 +11,9 @@ class StoreAdvanceRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return auth()->user()->hasPermissionTo('advance-create');
     }
 
     /**
@@ -21,10 +21,12 @@ class StoreAdvanceRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'user_id' => 'required|exists:users,id',
+            'advance_amount' => 'required|numeric|min:50|max:1000000',
+            'date' => 'required|date|before:tomorrow', /*date_format:Y-m-d|*/
         ];
     }
 }

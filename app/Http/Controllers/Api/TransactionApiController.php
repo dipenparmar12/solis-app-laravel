@@ -49,7 +49,7 @@ class TransactionApiController extends Controller
             $transaction = Transaction::create(request()->only([
                 'type', 'desc', 'status',
             ]));
-            return $this->res(request()->all(), 'Transaction created.');
+            return $this->res($transaction, 'Transaction created.');
         } catch (Throwable $th) {
             //throw $th;
             optional($transaction)->delete();

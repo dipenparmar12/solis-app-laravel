@@ -71,27 +71,16 @@ class SalaryApiController extends Controller
                 })
                 /* Filters */
                 ->where(function ($qry) {
-                    $qry->when(request('user_ids'), function ($qry) {
-                        $user_ids = request('user_ids');
-                        $user_ids = is_string($user_ids) ? explode(',', $user_ids) : $user_ids;
-                        $qry->whereIn('salaries.user_id', $user_ids);
-                    })
-                        ->when(request()->get('from_date'), function ($query) {
-                            $query->whereDate('salaries.month_year', '>=', request()->get('from_date'));
-                        })
-                        ->when(request()->get('to_date'), function ($query) {
-                            $query->whereDate('salaries.month_year', '<=', request()->get('to_date'));
-                        })
-                        ->when(request()->get('amount_min'), function ($query) {
-                            $query->where('salaries.amount', '>=', request()->get('amount_min'));
-                        })
-                        ->when(request()->get('amount_max'), function ($query) {
-                            $query->where('salaries.amount', '<=', request()->get('amount_max'));
-                        });
+                   $this->salary_filters($qry);
                 })
                 /* Filters END */
                 ->paginate(QueryStrService::determinePerPageRows())
                 ->appends(request()->all());
+
+//            $advances->getCollection()->transform(function ($item) {
+//                $item->subRows = $item->emi_info;
+//                return $item;
+//            });
 
             return $this->res($salaries, 'salaries');
         } catch (Throwable $t) {
@@ -99,6 +88,27 @@ class SalaryApiController extends Controller
             Log::error($error_msg);
             return $this->resError(request()->all(), $t->getMessage());
         }
+    }
+
+    public function salary_filters($qry)
+    {
+        return $qry->when(request('user_ids'), function ($qry) {
+            $user_ids = request('user_ids');
+            $user_ids = is_string($user_ids) ? explode(',', $user_ids) : $user_ids;
+            $qry->whereIn('salaries.user_id', $user_ids);
+        })
+            ->when(request()->get('from_date'), function ($query) {
+                $query->whereDate('salaries.month_year', '>=', request()->get('from_date'));
+            })
+            ->when(request()->get('to_date'), function ($query) {
+                $query->whereDate('salaries.month_year', '<=', request()->get('to_date'));
+            })
+            ->when(request()->get('amount_min'), function ($query) {
+                $query->where('salaries.amount', '>=', request()->get('amount_min'));
+            })
+            ->when(request()->get('amount_max'), function ($query) {
+                $query->where('salaries.amount', '<=', request()->get('amount_max'));
+            });
     }
 
 //

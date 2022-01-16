@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Advance;
 use App\Models\User;
 use App\Scopes\IsActiveScope;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use function request;
 
 class UserApiController extends Controller
@@ -52,7 +54,7 @@ class UserApiController extends Controller
 
     /**
      * Create new user.
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(): JsonResponse
     {
@@ -102,7 +104,7 @@ class UserApiController extends Controller
      * @param Request $request
      * @param User $user
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function update(Request $request, User $user): JsonResponse
     {
@@ -162,6 +164,23 @@ class UserApiController extends Controller
         } catch (\Throwable $th) {
             return $this->resError($th->getMessage());
         }
+    }
+
+
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function advances(Request $request, User $user): JsonResponse
+    {
+        $advances = Advance::select(['user_id', 'id', 'amount', 'date', 'paid_amount'])
+            ->where('user_id', $user->id)
+            ->where('settled', 0) // 0 -> Pending amount (outstanding)
+            ->orderByDesc('date')
+            ->get();
+        return $this->res($advances, 'Advance summary');
     }
 
 }

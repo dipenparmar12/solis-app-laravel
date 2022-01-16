@@ -124,3 +124,4 @@ xdebug.log_level=10
 - https://laravel-news.com/using-sanctum-to-authenticate-a-react-spa
 - https://laravelquestions.com/2020/05/01/csrf-cookies-not-set-for-cross-domain-requests-using-laravel-sanctum-and-angular
 - Heroku Accounts https://github.com/heroku/heroku-accounts
+- pagination not working in method chain: https://stackoverflow.com/questions/66938121/laravel-7-0-pagination-not-working-in-method-chain

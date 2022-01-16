@@ -17,7 +17,7 @@ class Advance extends Model
     public const PENDING = 0;
     public const PAYED = 1;
     public const ORDERS_BY_ALLOWED = [
-        'id', 'user_id', 'amount', 'date', 'created_by', 'created_at'
+        'id', 'user_id', 'amount', 'date', 'settled', 'created_by', 'created_at'
     ];
     protected $fillable = [
         'user_id', 'amount', 'date', 'paid_amount', 'settled', 'emi_info'
