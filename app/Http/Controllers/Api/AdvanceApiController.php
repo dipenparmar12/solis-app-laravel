@@ -144,6 +144,9 @@ class AdvanceApiController extends Controller
     public function advance_filters($qry)
     {
         return $qry
+            ->when(is_numeric(request('settled')), function ($qry) {
+                $qry->where('advances.settled', request('settled') == 0 ? 0 : 1);
+            })
             ->when(request()->has('user_ids'), function ($qry) {
                 $qry->whereIn('advances.user_id', request()->get('user_ids'));
             })
@@ -159,6 +162,7 @@ class AdvanceApiController extends Controller
             ->when(request('amount_max'), function ($query) {
                 $query->where('advances.amount', '<=', request('amount_max'));
             });
+
     }
 
 //    /**
