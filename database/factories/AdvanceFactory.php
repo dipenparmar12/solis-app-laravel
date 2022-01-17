@@ -14,7 +14,7 @@ class AdvanceFactory extends Factory
      */
     public function definition(): array
     {
-        $date = $this->faker->dateTimeBetween($startDate = '-6 months', $endDate = 'now');
+        $date = $this->faker->dateTimeBetween($startDate = '-12 months', $endDate = 'now');
         return [
             'user_id' => User::orderByRaw('RAND()')->first()->id,
             'amount' => $this->faker->numberBetween(1000, 25000),

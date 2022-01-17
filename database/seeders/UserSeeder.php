@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Advance;
+use App\Models\Salary;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -26,7 +28,7 @@ class UserSeeder extends Seeder
                 'email' => $user . '@gmail.com',
                 'password' => Hash::make('Admin@123'),
                 // 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-                'mobile' => 9898989 * rand(3, 8),
+                'mobile' => 9725722434 + rand(100,1000),
                 'salary' => 5000 * rand(2, 8),
                 'dob' => now()->subMonth(rand(1, 24)),
                 'doj' => now()->subMonth(rand(1, 24)),
@@ -42,7 +44,11 @@ class UserSeeder extends Seeder
             // }
         }
 
-        User::factory()->count(rand(20, 50))->create();
+        User::factory()
+            ->has(Advance::factory()->count(rand(1, 4)), 'advances')
+            ->has(Salary::factory()->count(1), 'salaries')
+            ->count(rand(5, 20))
+            ->create();
 
 //        DB::table('users')->insert([
 //            'name' => Str::random(10),

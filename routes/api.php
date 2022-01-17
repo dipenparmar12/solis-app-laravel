@@ -68,6 +68,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // salaries
     Route::get('/salaries', [SalaryApiController::class, 'index'])->name('api.salaries.get');
+    Route::post('/salaries', [SalaryApiController::class, 'store'])->name('api.salaries.store');
+    Route::delete('/salaries/{salary}', [SalaryApiController::class, 'destroy'])->name('api.salaries.destroy');
+
 
     // advances
     Route::get('/advances', [AdvanceApiController::class, 'index'])->name('api.advances.get');

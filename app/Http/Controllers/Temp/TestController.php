@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Temp;
 
 use App\Http\Controllers\Controller;
+use App\Models\Advance;
+use App\Models\Salary;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -62,5 +64,18 @@ class TestController extends Controller
             Log::error($error_msg);
             return $this->resError($error_msg, $t->getMessage());
         }
+    }
+
+    public function advance_emi_info($user_id)
+    {
+        return Advance::where('user_id', $user_id)->get();
+    }
+
+    public function user_seed()
+    {
+        return User::whereId(1)->first();
+//        $user = User::whereId(1)->first();
+//        $user->has(Salary::factory()->count(1));
+//        return $user;
     }
 }

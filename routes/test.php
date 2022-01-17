@@ -28,6 +28,10 @@ Route::get('', [TestController::class, 'get']);
 Route::get('/logout', [TestController::class, 'logout']);
 Route::get('/paginate', [TestController::class, 'paginateGet']);
 Route::get('/users/{id}', [TestController::class, 'userGet']);
+Route::get('/advance_emi_info/{user_id}', [TestController::class, 'advance_emi_info']);
+Route::get('/user_seed', [TestController::class, 'user_seed']);
+
+
 Route::get('/roles', [StaticDataApiController::class, 'getRoles']);
 Route::get('/projects', [ProjectApiController::class, 'index']);
 Route::post('/projects', [ProjectApiController::class, 'store']);

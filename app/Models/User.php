@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Scopes\IsActiveScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -78,5 +79,15 @@ class User extends Authenticatable implements HasMedia
     {
         parent::boot();
         static::addGlobalScope(new IsActiveScope('users.active'));
+    }
+
+    public function advances(): HasMany
+    {
+        return $this->hasMany(Advance::class, 'user_id', 'id');
+    }
+
+    public function salaries(): HasMany
+    {
+        return $this->hasMany(Salary::class, 'user_id', 'id');
     }
 }

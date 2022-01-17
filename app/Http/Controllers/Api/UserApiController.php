@@ -28,6 +28,7 @@ class UserApiController extends Controller
     {
         $users = User::withoutGlobalScope(IsActiveScope::class)
             ->latest()
+            ->with(['advances', 'salaries'])
 //            ->getMedia(User::PIC_MEDIA_COLLECTION)
             ->paginate(request('per_page') ?? 20)
             ->appends(request()->all());
@@ -41,10 +42,11 @@ class UserApiController extends Controller
      * @param $id // can be used direct implicit modal binding `User $user`
      * @return JsonResponse
      */
-    public function show($id): JsonResponse
+    public function show(User $user): JsonResponse
     {
-        $user = User::withoutGlobalScope(IsActiveScope::class)->findOrFail($id);
-        return $user;
+        $user->load(['advances', 'salaries']);
+        return $this->res($user);
+
         //        if (auth()->id() == $id or optional(auth()->user())->hasRole(['team', 'admin'])) {
         //            $data['model_data'] = User::withoutGlobalScope(IsActiveScope::class)->with('expenses', 'incomes')->findOrFail($id);
         //            return view('team.users.show')->with($data);

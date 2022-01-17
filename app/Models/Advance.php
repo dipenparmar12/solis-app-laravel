@@ -14,22 +14,21 @@ class Advance extends Model
     use HasFactory, SoftDeletes;
     use Userstamps;
 
-    public const PENDING = 0;
+    public const UNPAID = 0;
     public const PAYED = 1;
-    public const ORDERS_BY_ALLOWED = [
-        'id', 'user_id', 'amount', 'date', 'settled', 'created_by', 'created_at'
-    ];
     protected $fillable = [
         'user_id', 'amount', 'date', 'paid_amount', 'settled', 'emi_info'
     ];
-    protected $dates = ['date'];
     protected $hidden = [
         'updated_by', 'deleted_by', 'deleted_at', 'created_at', 'updated_at',
     ];
     protected $casts = [
         'emi_info' => 'object',
     ];
-
+    protected $dates = ['date'];
+    public const ORDERS_BY_ALLOWED = [
+        'id', 'user_id', 'amount', 'date', 'settled', 'created_at', 'updated_at', 'created_by', 'updated_by'
+    ];
 //    public const FILTERS_ALLOWED = [
 //        'id', 'user_id', 'amount', 'month_year', 'deduction', 'created_by',
 //    ];

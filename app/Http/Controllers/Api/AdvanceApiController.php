@@ -48,6 +48,7 @@ class AdvanceApiController extends Controller
 
         try {
             $advances = Advance::with(['user'])
+                ->latest()
                 ->select([
                     '*',
                     // "user_id", "amount", "date", "paid_amount", "settled", 'emi_info'
@@ -144,11 +145,13 @@ class AdvanceApiController extends Controller
     public function advance_filters($qry)
     {
         return $qry
+            ->when(request('user_ids'), function ($qry) {
+                $user_ids = request('user_ids');
+                $user_ids = is_string($user_ids) ? explode(',', $user_ids) : $user_ids;
+                $qry->whereIn('advances.user_id', $user_ids);
+            })
             ->when(is_numeric(request('settled')), function ($qry) {
                 $qry->where('advances.settled', request('settled') == 0 ? 0 : 1);
-            })
-            ->when(request()->has('user_ids'), function ($qry) {
-                $qry->whereIn('advances.user_id', request()->get('user_ids'));
             })
             ->when(request('from_date'), function ($query) {
                 $query->whereDate('advances.date', '>=', request('from_date'));
