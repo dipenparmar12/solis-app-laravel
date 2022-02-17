@@ -42,7 +42,6 @@ Route::middleware('auth:sanctum')->group(function () {
 //    Route::post('/funds', [FundApiController::class, 'store'])->name('funds.store');
 //    Route::put('/funds/{funds}', [FundApiController::class, 'update'])->name('funds.update');
 
-
     // Users
     Route::get('/users', [UserApiController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserApiController::class, 'show'])->name('users.show');

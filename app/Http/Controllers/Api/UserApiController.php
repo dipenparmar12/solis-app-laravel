@@ -64,7 +64,7 @@ class UserApiController extends Controller
         $this->validate(request(), [
             'name' => "required|min:2|max:100",
             'email' => "email|required|unique:users,email",
-            'password' => "nullable", "min:3", // TODO:dev
+            'password' => "nullable", "min:3", // TODO:dev, https://laravel.com/docs/9.x/upgrade#the-password-rule
             'profile_pic' => "image|mimes:jpg,jpeg,png,svg,gif|max:1024",
             'role_id' => "nullable|exists:roles,id",
             'mobile' => "required|numeric|digits_between:10,20",
@@ -113,7 +113,7 @@ class UserApiController extends Controller
         $this->validate(request(), [
             'name' => 'required|min:2|max:100',
             'email' => "email|required|unique:users,email,$user->id",
-            'password' => 'nullable', 'min:3', // TODO:dev
+            'password' => 'nullable', 'min:3', // TODO:dev, https://laravel.com/docs/9.x/upgrade#the-password-rule
             'profile_pic' => 'image|mimes:jpg,jpeg,png,svg,gif|max:1024',
             'role_id' => 'nullable|exists:roles,id',
             'mobile' => 'required|numeric|digits_between:10,20',
