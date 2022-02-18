@@ -2,35 +2,30 @@
 
 namespace App\Models;
 
-use App\Scopes\IsActiveScope;
-use App\Scopes\OrderByScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Wildside\Userstamps\Userstamps;
+use Spatie\MediaLibrary\HasMedia;
 
-class Fund extends Model
+class Income extends Model implements HasMedia
 {
     use HasFactory, SoftDeletes;
+    use InteractsWithMedia;
     use Userstamps;
 
-    public const DAYS = 2;
-    public const CACHE_TTL = self::DAYS * (24 * 60 * 60); // Cache time-to-live
-
-    protected $fillable = [
-        'user_id', 'transaction_id', 'project_id',
-        'amount', 'date',
-        'status',
-        'pic',
+    public const ORDERS_BY_ALLOWED = [
+        'received_by', 'project_id', 'transaction_id',
+        'from', 'amount', 'date',
+        'particular', 'desc',
     ];
 
-    public const ORDERS_BY_ALLOWED = [
-        'id',
-        'amount', 'date',
-        'user_id', 'transaction_id', 'project_id',
-        'created_by'
+    protected $fillable = [
+        'received_by', 'project_id', 'transaction_id',
+        'from', 'amount', 'date',
+        'particular', 'desc',
     ];
 
     protected $hidden = [
@@ -39,34 +34,14 @@ class Fund extends Model
 
     protected $dates = ['date'];
 
-
-    // TODO::Enable latter, queries orderBy DESC by default
-    public static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope(new OrderByScope('funds.date', 'DESC'));
-    }
-
-    /**
-     *
-     * @return BelongsTo
-     */
-    public function given_to(): BelongsTo
-    {
-        return $this
-            ->belongsTo(User::class, 'user_id', 'id')
-            ->select('id', 'name', 'fund')
-            ->withoutGlobalScope(IsActiveScope::class);
-    }
-
     /**
      *
      *
      */
-    public function received_from(): BelongsTo
+    public function received_by_user(): BelongsTo
     {
         return $this
-            ->belongsTo(User::class, 'created_by', 'id')
+            ->belongsTo(User::class, 'received_by', 'id')
             ->select('id', 'name');
     }
 

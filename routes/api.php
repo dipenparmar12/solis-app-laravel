@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AdvanceApiController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\FundApiController;
+use App\Http\Controllers\Api\IncomeApiController;
 use App\Http\Controllers\Api\ProjectApiController;
 use App\Http\Controllers\Api\SalaryApiController;
 use App\Http\Controllers\Api\StaticDataApiController;
@@ -75,6 +76,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/advances', [AdvanceApiController::class, 'index'])->name('api.advances.get');
     Route::get('/advance_summary', [AdvanceApiController::class, 'advance_summary'])->name('api.advances.summary');
     Route::post('/advances', [AdvanceApiController::class, 'store'])->name('api.advances.store');
+
+    // incomes
+    Route::get('/incomes', [IncomeApiController::class, 'index'])->name('api.incomes.get');
+    Route::post('/incomes', [IncomeApiController::class, 'store'])->name('api.incomes.store');
+    Route::get('/incomes/{income}', [IncomeApiController::class, 'show'])->name('api.incomes.store');
+
+    // 
 });
 
 // Test routes

@@ -17,7 +17,7 @@ class CreateSalariesTable extends Migration
             $table->id();
 
             // FK's
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
 
             $table->date('month_year');
@@ -33,7 +33,7 @@ class CreateSalariesTable extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
             $table->unsignedInteger('deleted_by')->nullable();
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('no action');
+            // $table->foreign('created_by')->references('id')->on('users')->onDelete('no action');
 
             $table->timestamps();
             $table->softDeletes();

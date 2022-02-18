@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AdvanceApiController;
 use App\Http\Controllers\Api\FundApiController;
+use App\Http\Controllers\Api\IncomeApiController;
 use App\Http\Controllers\Api\ProjectApiController;
 use App\Http\Controllers\Api\StaticDataApiController;
 use App\Http\Controllers\Temp\TestController;
@@ -38,8 +39,10 @@ Route::post('/projects', [ProjectApiController::class, 'store']);
 Route::get('/transactions', [StaticDataApiController::class, 'getTransactions']);
 Route::get('/funds', [FundApiController::class, 'index']);
 Route::get('/advances', [AdvanceApiController::class, 'index']);
+Route::get('/income/store', [IncomeApiController::class, 'store']);
 
-Route::get('/static/roles', [StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
-Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes'])->name('api.static.property_types');
-Route::get('/static/users', [StaticDataApiController::class, 'getUsers'])->name('api.static.users');
-Route::get('/static/transactions', [StaticDataApiController::class, 'getTransactions'])->name('api.static.transactions');
+
+Route::get('/static/roles', [StaticDataApiController::class, 'getRoles']);
+Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes']);
+Route::get('/static/users', [StaticDataApiController::class, 'getUsers']);
+Route::get('/static/transactions', [StaticDataApiController::class, 'getTransactions']);
