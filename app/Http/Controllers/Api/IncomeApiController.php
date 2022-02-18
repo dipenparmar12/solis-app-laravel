@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
@@ -83,24 +84,26 @@ class IncomeApiController extends Controller
     public function store(StoreIncomeRequest $request)
     {
         try {
-            $income = Income::first();
-//             return $income;
-
-            if ($request->hasFile('income_file')) {
-                $income->addMediaFromRequest('income_file')->toMediaCollection();
-            }
-
-//                return $income->getMedia()->map(function ($item) {
-//                    return $item->getUrl();
-//                })->toArray();
-
-            return request()->all();
+//            $income = Income::first();
+//            return $income;
+//            return request()->all();
 
             $income = Income::create(request()->only([
                 "received_by", "project_id", "transaction_id",
                 "from", "amount", "date",
                 'particular', 'desc',
             ]));
+
+            if ($request->hasFile('income_file')) {
+                $fileName = pathinfo(request()->file('income_file')->getClientOriginalName(), PATHINFO_BASENAME);
+                $income
+                    ->addMediaFromRequest('income_file')
+                    ->usingFileName($fileName)
+                    ->sanitizingFileName(function ($fileName) {
+                        return 'income__' . uniqid() . '__' . strtolower(str_replace(['#', '/', '\\', ' ', '.tmp'], '-', $fileName));
+                    })
+                    ->toMediaCollection('default', 'private');
+            }
 
             return $this->res($income, 'Income created successfully.');
 
@@ -110,6 +113,20 @@ class IncomeApiController extends Controller
             Log::error($error_msg);
             return $this->resError(request()->all(), $t->getMessage());
         }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Income $income
+     */
+    public function show(Income $income)
+    {
+//        $income->load([
+//            'project', 'received_by_user', 'transaction'
+//        ]);
+        $mediaItems = $income->getMedia();
+        return $income;
     }
 
     /**
@@ -136,21 +153,6 @@ class IncomeApiController extends Controller
             });
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Income $income
-     * @return JsonRe/sponse
-     */
-    public function show(Income $income)
-    {
-        $income->load([
-            'project', 'received_by_user', 'transaction'
-        ]);
-        $files = $income->getMedia();
-
-        return $this->res($income);
-    }
 //
 //    /**
 //     * Show the form for editing the specified resource.

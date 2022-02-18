@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\FundApiController;
 use App\Http\Controllers\Api\IncomeApiController;
 use App\Http\Controllers\Api\ProjectApiController;
 use App\Http\Controllers\Api\StaticDataApiController;
+use App\Http\Controllers\FileAccessController;
 use App\Http\Controllers\Temp\TestController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -39,8 +40,9 @@ Route::post('/projects', [ProjectApiController::class, 'store']);
 Route::get('/transactions', [StaticDataApiController::class, 'getTransactions']);
 Route::get('/funds', [FundApiController::class, 'index']);
 Route::get('/advances', [AdvanceApiController::class, 'index']);
-Route::get('/income/store', [IncomeApiController::class, 'store']);
-
+Route::get('/incomes/store', [IncomeApiController::class, 'store']);
+Route::get('/incomes/{income}', [IncomeApiController::class, 'show']);
+Route::get('/file/download/{path}', [FileAccessController::class, 'download']);
 
 Route::get('/static/roles', [StaticDataApiController::class, 'getRoles']);
 Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes']);

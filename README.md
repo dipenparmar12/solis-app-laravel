@@ -1,3 +1,5 @@
+
+
 ## PHP Laravel Backend application
 
 ## Start application
@@ -95,6 +97,7 @@ xdebug.show_local_vars=0
 xdebug.log="c:/wamp64/logs/xdebug.log"
 ;xdebug.log_level : 0 Criticals, 1 Connection, 3 Warnings, 5 Communication, 7 Information, 10 Debug	Breakpoint
 xdebug.log_level=10
+;xdebug.start_with_request = yes ; if you want to start with request 
 ```
 
 3. PhpStorm config
@@ -126,8 +129,9 @@ xdebug.log_level=10
 
 ## sources
 
--   markdown.md [cheat-sheet](https://www.markdownguide.org/cheat-sheet/)
--   https://laravel-news.com/using-sanctum-to-authenticate-a-react-spa
--   https://laravelquestions.com/2020/05/01/csrf-cookies-not-set-for-cross-domain-requests-using-laravel-sanctum-and-angular
--   Heroku Accounts https://github.com/heroku/heroku-accounts
--   pagination not working in method chain: https://stackoverflow.com/questions/66938121/laravel-7-0-pagination-not-working-in-method-chain
+- markdown.md [cheat-sheet](https://www.markdownguide.org/cheat-sheet/)
+- https://laravel-news.com/using-sanctum-to-authenticate-a-react-spa
+- https://laravelquestions.com/2020/05/01/csrf-cookies-not-set-for-cross-domain-requests-using-laravel-sanctum-and-angular
+- Heroku Accounts https://github.com/heroku/heroku-accounts
+- pagination not working in method chain: https://stackoverflow.com/questions/66938121/laravel-7-0-pagination-not-working-in-method-chain
+- File access: https://dev.to/fractalbit/tips-for-working-with-private-files-in-laravel-1g08

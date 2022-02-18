@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\SalaryApiController;
 use App\Http\Controllers\Api\StaticDataApiController;
 use App\Http\Controllers\Api\TransactionApiController;
 use App\Http\Controllers\Api\UserApiController;
+use App\Http\Controllers\FileAccessController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,7 +60,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/projects/{project}', [ProjectApiController::class, 'update'])->name('projects.update');
 //    Route::get('/projects/{project}', [ProjectApiController::class, 'show'])->name('projects.show');
 
-
     // Transactions
     Route::get('/transactions', [TransactionApiController::class, 'index'])->name('transactions.index');
     Route::post('/transactions', [TransactionApiController::class, 'store'])->name('transactions.store');
@@ -82,7 +82,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/incomes', [IncomeApiController::class, 'store'])->name('api.incomes.store');
     Route::get('/incomes/{income}', [IncomeApiController::class, 'show'])->name('api.incomes.store');
 
-    // 
+    // Other
+    Route::get('/file/download/{path}', [FileAccessController::class, 'download']);
+
 });
 
 // Test routes
