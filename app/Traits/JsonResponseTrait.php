@@ -17,7 +17,8 @@ trait JsonResponseTrait
             'results' => $data ?? [],
             'metadata' => [
                 'auth_id' => auth()->id(),
-                'url' => request()->url()
+                'url' => request()->url(),
+                'query_params' => request()->query()
             ],
         ];
         return Response::json($resData);

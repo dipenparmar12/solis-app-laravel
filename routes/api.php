@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes'])->name('api.static.property_types');
     Route::get('/static/users', [StaticDataApiController::class, 'getUsers'])->name('api.static.users');
     Route::get('/static/transactions', [StaticDataApiController::class, 'getTransactions'])->name('api.static.transactions');
+    Route::get('/static/projects', [StaticDataApiController::class, 'getProjects'])->name('api.static.projects');
 
     // Funds
     Route::get('/funds', [FundApiController::class, 'index'])->name('funds.index');
@@ -78,12 +79,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/advances', [AdvanceApiController::class, 'store'])->name('api.advances.store');
 
     // incomes
-    Route::get('/incomes', [IncomeApiController::class, 'index'])->name('api.incomes.get');
-    Route::post('/incomes', [IncomeApiController::class, 'store'])->name('api.incomes.store');
-    Route::get('/incomes/{income}', [IncomeApiController::class, 'show'])->name('api.incomes.store');
+    Route::controller(IncomeApiController::class)->group(function () {
+        Route::get('/incomes', 'index')->name('api.incomes.get');
+        Route::post('/incomes', 'store')->name('api.incomes.store');
+        Route::get('/incomes/{income}', 'show')->name('api.incomes.store');
+    });
 
-    // Other
-    Route::get('/file/download/{path}', [FileAccessController::class, 'download']);
+    // // Other TODO:later
+    // Route::get('/file/download/{path}', [FileAccessController::class, 'download']);
 
 });
 

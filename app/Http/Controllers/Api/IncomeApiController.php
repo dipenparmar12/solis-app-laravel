@@ -7,6 +7,7 @@ use App\Http\Requests\StoreIncomeRequest;
 use App\Http\Requests\UpdateIncomeRequest;
 use App\Models\Income;
 use Facades\App\Services\QueryStrService;
+use http\Env\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
 
+// TODO::IMP SortBy not working in income index
 class IncomeApiController extends Controller
 {
 
@@ -81,18 +83,20 @@ class IncomeApiController extends Controller
      * @param StoreIncomeRequest $request
      * //     * @return JsonResponse
      */
-    public function store(StoreIncomeRequest $request)
+    public function store(StoreIncomeRequest $request): JsonResponse
     {
         try {
-//            $income = Income::first();
-//            return $income;
-//            return request()->all();
-
             $income = Income::create(request()->only([
-                "received_by", "project_id", "transaction_id",
+               // "received_by",
+                "project_id", "transaction_id",
                 "from", "amount", "date",
                 'particular', 'desc',
             ]));
+
+            if (request('received_by')) {
+                $income->received_by = request('received_by') ?: auth()->id();
+                $income->save();
+            }
 
             if ($request->hasFile('income_file')) {
                 $fileName = pathinfo(request()->file('income_file')->getClientOriginalName(), PATHINFO_BASENAME);

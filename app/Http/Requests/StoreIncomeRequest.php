@@ -26,7 +26,7 @@ class StoreIncomeRequest extends FormRequest
     {
         // return [];
         return [
-            'received_by' => 'required|exists:users,id',
+            'received_by' => 'nullable|exists:users,id',
             'project_id' => 'required|exists:projects,id',
             'transaction_id' => 'required|exists:transactions,id',
 
