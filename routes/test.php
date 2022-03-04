@@ -32,6 +32,7 @@ Route::get('/paginate', [TestController::class, 'paginateGet']);
 Route::get('/users/{id}', [TestController::class, 'userGet']);
 Route::get('/advance_emi_info/{user_id}', [TestController::class, 'advance_emi_info']);
 Route::get('/user_seed', [TestController::class, 'user_seed']);
+Route::get('/csv_seed', [TestController::class, 'csvImport']);
 
 
 Route::get('/roles', [StaticDataApiController::class, 'getRoles']);

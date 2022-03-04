@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AdvanceApiController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
+use App\Http\Controllers\Api\DealerApiController;
 use App\Http\Controllers\Api\FundApiController;
 use App\Http\Controllers\Api\IncomeApiController;
 use App\Http\Controllers\Api\ProjectApiController;
@@ -82,7 +83,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(IncomeApiController::class)->group(function () {
         Route::get('/incomes', 'index')->name('api.incomes.get');
         Route::post('/incomes', 'store')->name('api.incomes.store');
-        Route::get('/incomes/{income}', 'show')->name('api.incomes.store');
+        Route::get('/incomes/{income}', 'show')->name('api.incomes.show');
+    });
+
+    // // Dealers
+    Route::controller(DealerApiController::class)->group(function () {
+        Route::get('/dealers', 'index')->name('api.dealers.get');
+        // Route::post('/dealers', 'store')->name('api.dealers.store');
     });
 
     // // Other TODO:later

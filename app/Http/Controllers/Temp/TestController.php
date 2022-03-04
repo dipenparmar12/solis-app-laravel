@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Temp;
 
 use App\Http\Controllers\Controller;
 use App\Models\Advance;
+use App\Models\Dealer;
 use App\Models\Salary;
 use App\Models\User;
+use App\Traits\CsvImportTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;
@@ -13,6 +15,8 @@ use Throwable;
 
 class TestController extends Controller
 {
+    use CsvImportTrait;
+
     /**
      * @return bool
      */
@@ -77,5 +81,10 @@ class TestController extends Controller
 //        $user = User::whereId(1)->first();
 //        $user->has(Salary::factory()->count(1));
 //        return $user;
+    }
+
+    public function csvImport()
+    {
+        $this->importCsv(New Dealer(), database_path('csv\dealers.csv') );
     }
 }
