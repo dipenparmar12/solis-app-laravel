@@ -1,0 +1,27 @@
+id,project_id,dealer_id,desc,amount,s_date,e_date,status
+1,2,1,Sri balaji interiors Bhomaram,500,01-12-2022,12-12-2022,1
+2,1,1,Vikash interiors Rameshwar,1000,01-12-2022,12-12-2022,1
+3,2,2,Dev Traders Chandaram,1500,01-12-2022,12-12-2022,1
+4,1,2,Vijay Electrician Vijay Electrician,2000,01-12-2022,12-12-2022,1
+5,3,3,Arif Pop Arif pop,2500,01-12-2022,12-12-2022,0
+6,4,3,Ajit painter Ajit painter,3000,01-12-2022,12-12-2022,1
+7,2,1,Rajesh Painter Rajesh painter,3500,01-12-2022,12-12-2022,1
+8,1,1,Karthik & Shiva Ekdanta factory,4000,01-12-2022,12-12-2022,1
+9,2,2,Aristo vivek K Bros Aristo,4500,01-12-2022,12-12-2022,0
+10,1,2,KGP KRISHNA PLYWOOD AND GLASS,5000,01-12-2022,12-12-2022,1
+11,3,3,Dhiraj solis interior,5500,01-12-2022,12-12-2022,1
+12,4,3,Dhiraj Vendor parmar,6000,01-12-2022,12-12-2022,1
+13,2,1,Jai maa latiyal Hukum singh carpenter,6500,01-12-2022,12-12-2022,0
+14,1,1,Salary Account account,7000,01-12-2022,12-12-2022,1
+15,2,2,SOLIS INTERIORS Salary Account,7500,01-12-2022,12-12-2022,1
+16,1,2,Granite Work Devkaran Granite work,8000,01-12-2022,12-12-2022,1
+17,3,3,Painter Work Geeri Painter,8500,01-12-2022,12-12-2022,0
+18,4,3,Sofa Work Chndramohan Sofa Work,9000,01-12-2022,12-12-2022,0
+19,2,1,Ramesh Krishna Hardware,9500,01-12-2022,12-12-2022,1
+20,1,1,Pintu Krishna Hardware Krishna Electrical,10000,01-12-2022,12-12-2022,1
+21,2,2,Kaluram Carpenter Kaluram Carpenter,10500,01-12-2022,12-12-2022,0
+22,1,2,Maheshwari Impex Maheshwari Impex,11000,01-12-2022,12-12-2022,1
+23,3,3,Mr Taj Grill & mosquito mesh Taj Grill & mosquito mesh,11500,01-12-2022,12-12-2022,1
+24,4,3,Sri Nandi Glass & Hardware & ETc Sri Nandi Glass & Hardware & ETc,12000,01-12-2022,12-12-2022,1
+25,2,1,N.K (Jyoti Factory) N.k Company,12500,01-12-2022,12-12-2022,1
+26,1,1,Bhadra Tarpaulin Industry Floor met Bhadra Tarpaulin Industry Floor met,13000,01-12-2022,12-12-2022,1

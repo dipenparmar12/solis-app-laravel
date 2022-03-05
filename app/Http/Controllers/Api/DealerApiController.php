@@ -32,6 +32,11 @@ class DealerApiController extends Controller
 
     }
 
+    private function filters($qry)
+    {
+        return $qry;
+    }
+
 //    /**
 //     * Store a newly created resource in storage.
 //     *
@@ -42,10 +47,6 @@ class DealerApiController extends Controller
 //    {
 //        //
 //    }
-    private function filters($qry)
-    {
-        return $qry;
-    }
 
     /**
      * Display the specified resource.

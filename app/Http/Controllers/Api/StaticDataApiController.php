@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dealer;
 use App\Models\Project;
 use App\Models\Transaction;
 use App\Models\User;
@@ -86,6 +87,18 @@ class StaticDataApiController extends Controller
             "transactions.id",
             "transactions.id as value",
             "transactions.type as label",
+        ])
+            ->get();
+        return $this->res($data);
+    }
+
+    public function getDealers(): JsonResponse
+    {
+        /*$request->validate(["role" => "nullable|sometimes|min:1",]);*/
+        $data = Dealer::select([
+            "dealers.id",
+            "dealers.id as value",
+            "dealers.firm as label",
         ])
             ->get();
         return $this->res($data);

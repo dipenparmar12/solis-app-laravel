@@ -33,6 +33,10 @@ return new class extends Migration
             $table->string('particular')->nullable(); // Shows in receipt template
             $table->text('desc')->nullable(); // internal information
 
+
+
+            $table->integer('status')->nullable()->default(1); // Approval by user
+
             // // created,updated,Delete By
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
@@ -41,7 +45,6 @@ return new class extends Migration
             // $table->foreign('updated_by')->references('id')->on('users');
             // $table->foreign('deleted_by')->references('id')->on('users');
 
-            $table->integer('status')->nullable()->default(1); // Approval by user
             $table->softDeletes();
             $table->timestamps();
         });

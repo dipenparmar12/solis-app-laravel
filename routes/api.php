@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AdvanceApiController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\DealerApiController;
+use App\Http\Controllers\Api\EstimateApiController;
 use App\Http\Controllers\Api\FundApiController;
 use App\Http\Controllers\Api\IncomeApiController;
 use App\Http\Controllers\Api\ProjectApiController;
@@ -39,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/static/users', [StaticDataApiController::class, 'getUsers'])->name('api.static.users');
     Route::get('/static/transactions', [StaticDataApiController::class, 'getTransactions'])->name('api.static.transactions');
     Route::get('/static/projects', [StaticDataApiController::class, 'getProjects'])->name('api.static.projects');
+    Route::get('/static/dealers', [StaticDataApiController::class, 'getDealers'])->name('api.static.dealers');
 
     // Funds
     Route::get('/funds', [FundApiController::class, 'index'])->name('funds.index');
@@ -90,6 +92,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(DealerApiController::class)->group(function () {
         Route::get('/dealers', 'index')->name('api.dealers.get');
         // Route::post('/dealers', 'store')->name('api.dealers.store');
+    });
+
+    // // Estimate
+    Route::controller(EstimateApiController::class)->group(function () {
+        Route::get('/estimates', 'index')->name('api.estimates.get');
+         Route::post('/estimates', 'store')->name('api.estimates.store');
     });
 
     // // Other TODO:later

@@ -23,6 +23,7 @@ trait CsvImportTrait
     public function csvToArray($filename = '', $delimiter = ','): bool|array
     {
         if (!file_exists($filename) || !is_readable($filename))
+            dump("File not exists $filename");
             return false;
 
         $header = null;
