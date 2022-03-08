@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Route;
 // Auth routes
 Route::get('/sanctum/csrf-cookie', [LoginController::class, 'csrfCookie'])->name('csrf-cookie');
 Route::post('/sanctum/login', [LoginController::class, 'login'])->name('login');
+Route::get('/sanctum/login', [LoginController::class, 'redirect']); // NOT FOUND redirected
 Route::any('/sanctum/logout', [LogoutController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 Route::any('/me', [LoginController::class, 'me'])->name('me')->middleware('auth:sanctum');
 

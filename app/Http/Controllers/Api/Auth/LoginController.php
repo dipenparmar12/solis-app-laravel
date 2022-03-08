@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -37,20 +38,26 @@ class LoginController extends Controller
 
     return response()->json([
       'token' => $token,
-      'token_type' => 'Bearer',
-      'data' => $user,
+        'token_type' => 'Bearer',
+        'data' => $user,
     ]);
   }
 
-  public function me(Request $request)
-  {
-    return $request->user();
-  }
+    public function me(Request $request)
+    {
+        return $request->user();
+    }
 
-  public function csrfCookie()
-  {
-    return response()->json([
-      'csrf_token' => csrf_token(),
-    ]);
-  }
+    public function csrfCookie()
+    {
+        return response()->json([
+            'csrf_token' => csrf_token(),
+        ]);
+    }
+
+    public function redirect(): JsonResponse
+    {
+        return response()->json('NOT FOUND', 403);
+        // return redirect('/');
+    }
 }

@@ -18,22 +18,26 @@ class EstimateApiController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * TODO:IMP remove media fields columns
      * @return JsonResponse
      */
     public function index()
     {
         try {
-            $dealers = Estimate::
+            $estimates = Estimate::
             // select([ '*', ])->
             with([
-                'project', 'dealer'
+                'project', 'dealer', 'media'
             ])->
             latest()
                 ->paginate(QueryStrService::determinePerPageRows())
                 ->appends(request()->all());
 
-            return $this->res($dealers, 'Dealers resource.');
+//           $estimates = $estimates->getCollection()->transform(function ($item) {
+//                return $item;
+//            });
+
+            return $this->res($estimates, 'Dealers resource.');
         } catch (Throwable $t) {
             return $this->resError(request()->all(), $t->getMessage());
         }
