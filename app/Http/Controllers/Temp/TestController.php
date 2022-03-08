@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Temp;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\MediaHeadersMiddleware;
 use App\Models\Advance;
 use App\Models\Dealer;
-use App\Models\Salary;
+use App\Models\Estimate;
 use App\Models\User;
 use App\Traits\CsvImportTrait;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Throwable;
 
@@ -85,6 +88,52 @@ class TestController extends Controller
 
     public function csvImport()
     {
-        $this->importCsv(New Dealer(), database_path('csv\dealers.csv') );
+        $this->importCsv(new Dealer(), database_path('csv\dealers.csv'));
+    }
+
+    /**
+     * @param Request $request
+     * @return void
+     * @see https://spatie.be/docs/laravel-medialibrary/v10/api/adding-files#content-addallmediafromrequest
+     */
+    public function fileUpload(Request $request)
+    {
+        $estimate = Estimate::find(request('id'));
+        if (request()->hasFile('files')) {
+//            $estimate->clearMediaCollection('estimates'); // default, estimates collection
+            $files = reset(request()->files);
+            $estimate
+                ->addAllMediaFromRequest($files)
+                ->each(function ($fileAdder) {
+                    $fileAdder
+                        ->withCustomProperties([
+                            'uploaded_by' => auth()->id(),
+                        ])
+                        ->toMediaCollection('estimates', 'private');
+                });
+        }
+        $media = $estimate->getMedia('estimates');
+        return $media;
+    }
+
+    public function getMedia()
+    {
+        $id = (request('id'));
+        $media = Estimate::findOrFail($id);
+        return $media->getMedia('estimates');
+    }
+
+    public function downloadFile()
+    {
+        $file = request('path') ?: 'test.png';
+        $path = storage_path("app/uploads/$file");
+        $path = str_replace('//', '/', $path);
+//      $path = 'C:/projects/solis_app/solis_laravel/storage/app\uploads\test.png';
+//      dd($path);
+        if (file_exists($path)) {
+            return response()->file($path);
+        }
+        return abort(404, request('path'));
     }
 }
+

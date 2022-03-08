@@ -33,7 +33,6 @@ class StoreEstimateRequest extends FormRequest
             'estimates.*.amount' => 'required|numeric|min:50|max:1000000',
 
             'desc' => 'nullable|string',
-
         ];
     }
 }

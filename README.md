@@ -1,5 +1,6 @@
 
 
+
 ## PHP Laravel Backend application
 
 ## Start application
@@ -135,3 +136,4 @@ xdebug.log_level=10
 - Heroku Accounts https://github.com/heroku/heroku-accounts
 - pagination not working in method chain: https://stackoverflow.com/questions/66938121/laravel-7-0-pagination-not-working-in-method-chain
 - File access: https://dev.to/fractalbit/tips-for-working-with-private-files-in-laravel-1g08
+- JSON to Query string convert online: https://www.convertonline.io/convert/json-to-query-string#

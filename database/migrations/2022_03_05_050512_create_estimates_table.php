@@ -25,10 +25,10 @@ return new class extends Migration
 
             // //
             $table->integer('amount')->nullable();
-            $table->date('s_date')->nullable(false);
+            $table->date('s_date')->nullable();
             $table->date('e_date')->nullable();
             $table->text('desc')->nullable();
-
+            $table->text('group_id')->nullable();
 
             $table->integer('status')->nullable()->default(1);
 

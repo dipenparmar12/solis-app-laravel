@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AdvanceApiController;
+use App\Http\Controllers\Api\EstimateApiController;
 use App\Http\Controllers\Api\FundApiController;
 use App\Http\Controllers\Api\IncomeApiController;
 use App\Http\Controllers\Api\ProjectApiController;
@@ -33,7 +34,8 @@ Route::get('/users/{id}', [TestController::class, 'userGet']);
 Route::get('/advance_emi_info/{user_id}', [TestController::class, 'advance_emi_info']);
 Route::get('/user_seed', [TestController::class, 'user_seed']);
 Route::get('/csv_seed', [TestController::class, 'csvImport']);
-
+Route::any('/file_upload/{id}', [TestController::class, 'fileUpload']);
+Route::get('/media', [TestController::class, 'getMedia']);
 
 Route::get('/roles', [StaticDataApiController::class, 'getRoles']);
 Route::get('/projects', [ProjectApiController::class, 'index']);
@@ -43,6 +45,7 @@ Route::get('/funds', [FundApiController::class, 'index']);
 Route::get('/advances', [AdvanceApiController::class, 'index']);
 Route::get('/incomes/store', [IncomeApiController::class, 'store']);
 Route::get('/incomes/{income}', [IncomeApiController::class, 'show']);
+Route::get('/estimates', [EstimateApiController::class, 'store']);
 Route::get('/file/download/{path}', [FileAccessController::class, 'download']);
 
 Route::get('/static/roles', [StaticDataApiController::class, 'getRoles']);

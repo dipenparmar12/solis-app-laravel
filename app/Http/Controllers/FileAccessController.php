@@ -3,21 +3,42 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class FileAccessController extends Controller
 {
-    public function download($file)
+    public function download()
     {
-        return $file;
-        // We should do our authentication/authorization checks here
-        // We assume you have a FileModel with a defined belongs to User relationship.
-        if(Auth::user() && Auth::id() === $file->user->id) {
-            // filename should be a relative path inside storage/app to your file like 'userfiles/report1253.pdf'
-            return Storage::download($file->filename);
-        }else{
-            return abort('403');
+        $id = request('id');
+        $media_file = Media::where('id',$id)
+            ->when(!auth()->user()->hasAnyPermission(['estimate-list-all']), function ($query) {
+                $query->where('custom_properties->uploaded_by', auth()->id());
+            })
+            ->firstOrFail();
+
+        if (isset($media_file) && $media_file) {
+            return $media_file;
         }
+        return response()->json('NOT FOUND', 403);
+//        return abort(403);
     }
+
+
+    /**
+     * @return never|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @desc not using it
+     */
+    public function working_test()
+    {
+        $file = request('path');
+        if(auth()) {
+            $path = storage_path("app/uploads/$file");
+            $path = str_replace('//', '/', $path);
+            if (file_exists($path)) {
+                return response()->file($path);
+            }
+        }
+        return abort(403, request('path'));
+    }
+
 }

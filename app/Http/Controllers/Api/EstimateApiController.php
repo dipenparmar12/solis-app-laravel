@@ -8,6 +8,9 @@ use App\Http\Requests\UpdateEstimateRequest;
 use Facades\App\Services\QueryStrService;
 use App\Models\Estimate;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Throwable;
 
 
@@ -43,10 +46,47 @@ class EstimateApiController extends Controller
      * @param StoreEstimateRequest $request
      * @return JsonResponse
      */
-    public function store(StoreEstimateRequest $request): JsonResponse
+    public function store(StoreEstimateRequest $request)
     {
         try {
-            return $this->res($request->all(), 'Success');
+//            return request()->all();
+            $groupId = Str::random(7);
+            $estimates = collect(json_decode(request('estimates'), true));
+
+            $estimates = $estimates->map(function ($item) use ($groupId) {
+                $estimate = new Estimate();
+                $estimate->amount = $item['amount'];
+                $estimate->dealer_id = $item['dealer_id'];
+                $estimate->project_id = request('project_id');
+                $estimate->s_date = request('s_date');
+                $estimate->e_date = request('e_date');
+                $estimate->created_by = auth()->id();
+                $estimate->updated_by = auth()->id();
+                $estimate->created_at = now();
+                $estimate->updated_at = now();
+                $estimate->group_id = $groupId;
+                $estimate->save();
+
+                return $estimate;
+            });
+
+
+            if (request()->hasFile('files')) {
+                // $estimate->clearMediaCollection('estimates'); // default, estimates collection
+                $files = reset(request()->files); // 1st item
+                $estimates->first()
+                    ->addAllMediaFromRequest($files)
+                    ->each(function ($fileAdder) use ($estimates) {
+                        $fileAdder
+                            ->withCustomProperties([
+                                'uploaded_by' => auth()->id(),
+                                'estimates' => $estimates->values()->toJson()
+                            ])
+                            ->toMediaCollection('estimates', 'private');
+                    });
+            }
+
+            return $this->res($estimates->toArray(), 'Success');
         } catch (Throwable $t) {
             return $this->resError(request()->all(), $t->getMessage());
         }
@@ -54,7 +94,7 @@ class EstimateApiController extends Controller
 
 //    /**
 //     * Show the form for creating a new resource.
-//     *
+//     *desc = 'Desc'
 //     * @return \Illuminate\Http\Response
 //     */
 //    public function create()
