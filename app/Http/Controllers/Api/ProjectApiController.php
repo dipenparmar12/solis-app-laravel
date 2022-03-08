@@ -94,7 +94,7 @@ class ProjectApiController extends Controller
                 'location', 'p_type', 'address'
             ]));
 
-            return $this->res(request()->all(), 'Project created.');
+            return $this->res($project, 'Project created.');
         } catch (Throwable $th) {
             //throw $th;
             optional($project)->delete();

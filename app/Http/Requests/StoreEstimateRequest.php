@@ -13,7 +13,13 @@ class StoreEstimateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        /**
+         * By default it returns false, change it to
+         * something like this if u are checking authentication
+         */
+        return auth()->check(); // <------------------
+//        return auth()->user()->hasPermissionTo('income-create');
+
 //        return false;
     }
 

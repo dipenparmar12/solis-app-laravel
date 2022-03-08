@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\DealerApiController;
 use App\Http\Controllers\Api\EstimateApiController;
+use App\Http\Controllers\Api\ExpenseApiController;
 use App\Http\Controllers\Api\FundApiController;
 use App\Http\Controllers\Api\IncomeApiController;
 use App\Http\Controllers\Api\ProjectApiController;
@@ -98,11 +99,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // // Estimate
     Route::controller(EstimateApiController::class)->group(function () {
         Route::get('/estimates', 'index')->name('api.estimates.get');
-         Route::post('/estimates', 'store')->name('api.estimates.store');
+        Route::post('/estimates', 'store')->name('api.estimates.store');
     });
 
-    // // Other TODO:later
-    // Route::get('/file/download/{path}', [FileAccessController::class, 'download']);
+    // // Expenses
+    Route::controller(ExpenseApiController::class)->group(function () {
+        Route::post('/expenses', 'store')->name('api.expenses.store');
+    });
 
 });
 

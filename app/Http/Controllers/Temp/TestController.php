@@ -7,6 +7,7 @@ use App\Http\Middleware\MediaHeadersMiddleware;
 use App\Models\Advance;
 use App\Models\Dealer;
 use App\Models\Estimate;
+use App\Models\Expense;
 use App\Models\User;
 use App\Traits\CsvImportTrait;
 use Illuminate\Http\Request;
@@ -84,6 +85,12 @@ class TestController extends Controller
 //        $user = User::whereId(1)->first();
 //        $user->has(Salary::factory()->count(1));
 //        return $user;
+    }
+
+    public function expense_seed()
+    {
+        Expense::truncate();
+        $this->importCsv(new Expense(), database_path('csv\expenses.csv'));
     }
 
     public function csvImport()

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreFundRequest extends FormRequest
+class UpdateExpenseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,12 +13,7 @@ class StoreFundRequest extends FormRequest
      */
     public function authorize()
     {
-        /**
-         * By default it returns false, change it to
-         * something like this if u are checking authentication
-         */
-        return auth()->check(); // <------------------
-
+        return false;
     }
 
     /**

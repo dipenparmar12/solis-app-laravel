@@ -13,7 +13,14 @@ class StoreSalaryRequest extends FormRequest
      */
     public function authorize()
     {
+
+        /**
+         * By default it returns false, change it to
+         * something like this if u are checking authentication
+         */
         return auth()->user()->hasPermissionTo('salary-create');
+//        return auth()->check(); // <------------------
+
     }
 
     /**

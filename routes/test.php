@@ -33,6 +33,7 @@ Route::get('/paginate', [TestController::class, 'paginateGet']);
 Route::get('/users/{id}', [TestController::class, 'userGet']);
 Route::get('/advance_emi_info/{user_id}', [TestController::class, 'advance_emi_info']);
 Route::get('/user_seed', [TestController::class, 'user_seed']);
+Route::get('/expense_seed', [TestController::class, 'expense_seed']);
 Route::get('/csv_seed', [TestController::class, 'csvImport']);
 Route::any('/file_upload/{id}', [TestController::class, 'fileUpload']);
 Route::get('/media', [TestController::class, 'getMedia']);

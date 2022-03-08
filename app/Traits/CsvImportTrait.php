@@ -16,15 +16,21 @@ use Illuminate\Support\Facades\Response;
 trait CsvImportTrait
 {
     /**
-     * @param $filename
-     * @param $delimiter
+     * @param string $filename
+     * @param string $delimiter
      * @return bool|array
      */
-    public function csvToArray($filename = '', $delimiter = ','): bool|array
+    public function csvToArray(string $filename = '', string $delimiter = ','): bool|array
     {
-        if (!file_exists($filename) || !is_readable($filename))
+        if (!file_exists($filename)){
             dump("File not exists $filename");
             return false;
+        }
+
+        if (!is_readable($filename)){
+            dump("Can not read file: $filename");
+            return false;
+        }
 
         $header = null;
         $data = [];
@@ -54,11 +60,15 @@ trait CsvImportTrait
     public function importCsv(Model $modal, $csvFilePath): string
     {
         $customerArr = $this->csvToArray($csvFilePath);
-        for ($i = 1; $i < count($customerArr); $i ++)
-        {
-            $modal::firstOrCreate($customerArr[$i]);
+        if($customerArr){
+            for ($i = 1; $i < count($customerArr); $i ++)
+            {
+                $modal::firstOrCreate($customerArr[$i]);
+            }
+            return 'Jobi done or what ever';
         }
-        return 'Jobi done or what ever';
+
+        return "Something went wrong with file: ".$csvFilePath;
 
 //        $data = [];
 //        for ($i = 0; $i < count($customerArr); $i ++)
