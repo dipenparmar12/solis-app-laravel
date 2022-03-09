@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
 use App\Models\Expense;
+use Facades\App\Services\QueryStrService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
@@ -13,15 +14,52 @@ use Throwable;
 
 class ExpenseApiController extends Controller
 {
-//    /**
-//     * Display a listing of the resource.
-//     *
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function index()
-//    {
-//        //
-//    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        try {
+            $expenses = Expense::
+            // select([ '*', ])->
+            with([
+                'project', 'dealer', 'transaction',
+                'expense_by_user',
+            ])
+                ->latest()
+                /* User Permission filter */
+                ->when(!auth()->user()->hasAnyPermission('expense-list-all'), function ($qry) {
+                    return $qry->where('expenses.expense_by', auth()->id());
+                })
+                /* Dynamic Order By -amount=desc, amount=acs */
+                ->when(count($orderByPairs = QueryStrService::getOrderBy(Expense::class)) ?? 0, function ($qry) use ($orderByPairs) {
+                    $orderByPairs->each(function ($pair) use ($qry) {
+                        if ($pair && count($pair)) {
+                            // Use the 'splat' to turn the pair into two arguments
+                            $qry->orderBy(...$pair);
+                        }
+                    });
+                })
+                /* Filters */
+                ->where(function ($qry) {
+                    return $this->income_filters($qry);
+                })
+                /* Filters END */
+                ->paginate(QueryStrService::determinePerPageRows())
+                ->appends(request()->all());
+
+//            $expenses->getCollection()->transform(function ($item) {
+//                $item->subRows = $item->emi_info;
+//                return $item;
+//            });
+
+            return $this->res($expenses, 'Expenses list.');
+        } catch (Throwable $t) {
+            return $this->resError(request()->all(), $t->getMessage());
+        }
+    }
 
 
     /**
@@ -30,7 +68,7 @@ class ExpenseApiController extends Controller
      * @param StoreExpenseRequest $request
      * @return JsonResponse
      */
-    public function store(StoreExpenseRequest $request)
+    public function store(StoreExpenseRequest $request): JsonResponse
     {
         $record = null;
         try {
@@ -51,6 +89,14 @@ class ExpenseApiController extends Controller
             return $this->resError($th->getMessage());
         }
     }
+
+    private function income_filters($qry)
+    {
+        return $qry;
+    }
+}
+
+
 //
 //    /**
 //     * Display the specified resource.
@@ -96,4 +142,3 @@ class ExpenseApiController extends Controller
 //    {
 //        //
 //    }
-}

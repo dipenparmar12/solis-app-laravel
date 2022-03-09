@@ -6,6 +6,7 @@ use App\Models\Dealer;
 use App\Traits\CsvImportTrait;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class DealerSeeder extends Seeder
 {
@@ -18,8 +19,10 @@ class DealerSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
         Dealer::truncate();
         $this->importCsv(New Dealer(), database_path('csv\dealers.csv') );
+        Schema::enableForeignKeyConstraints();
     }
 
 }

@@ -13,6 +13,7 @@ use App\Traits\CsvImportTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Throwable;
@@ -87,16 +88,22 @@ class TestController extends Controller
 //        return $user;
     }
 
-    public function expense_seed()
+    public function dealer_seed()
     {
-        Expense::truncate();
-        $this->importCsv(new Expense(), database_path('csv\expenses.csv'));
+        Schema::disableForeignKeyConstraints();
+        Dealer::truncate();
+        $this->importCsv(new Dealer(), database_path('csv\dealers.csv'));
+        Schema::enableForeignKeyConstraints();
     }
 
-    public function csvImport()
+    public function expense_seed()
     {
-        $this->importCsv(new Dealer(), database_path('csv\dealers.csv'));
+        Schema::disableForeignKeyConstraints();
+        Expense::truncate();
+        $this->importCsv(new Expense(), database_path('csv\expenses.csv'));
+        Schema::enableForeignKeyConstraints();
     }
+
 
     /**
      * @param Request $request

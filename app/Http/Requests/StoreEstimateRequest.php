@@ -35,6 +35,7 @@ class StoreEstimateRequest extends FormRequest
             's_date' => 'required|date|after:2010-01-01',  /*date_format:Y-m-d|*/
             'e_date' => 'required|date|after_or_equal:s_date', // before:tomorrow
 
+            // TODO::validation required_array_keys:foo,bar,...
             'estimates.*.dealer_id' => 'required|exists:dealers,id',
             'estimates.*.amount' => 'required|numeric|min:50|max:1000000',
 

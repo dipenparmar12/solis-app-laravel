@@ -36,13 +36,25 @@ class StaticDataApiController extends Controller
         return $this->res($roles);
     }
 
-    public function getTransactionFormats(): JsonResponse
+
+    public function getExpenseCategories(): JsonResponse
     {
-        $roles = [
-            "Apartment",
+        $date = [
+            ['value' => 'project', 'label' => 'Project',],
+            ['value' => 'office', 'label' => 'Office',],
+            ['value' => 'personal', 'label' => 'Personal',],
+            ['value' => 'other', 'label' => 'Other',],
         ];
-        return $this->res($roles);
+        return $this->res($date);
     }
+
+//    public function getTransactionFormats(): JsonResponse
+//    {
+//        $roles = [
+//            "Apartment",
+//        ];
+//        return $this->res($roles);
+//    }
 
     public function getUsers(): JsonResponse
     {

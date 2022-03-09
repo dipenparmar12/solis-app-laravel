@@ -25,8 +25,12 @@ class DatabaseSeeder extends Seeder
             RolesSeeder::class,
             UserSeeder::class,
             ProjectSeeder::class,
+            DealerSeeder::class,
             TransactionSeeder::class,
+            IncomeSeeder::class,
             FundSeeder::class,
+            EstimateSeeder::class,
+            ExpenseSeeder::class,
             // AdvanceSeeder::class, // // included in UsersSeeder
         ]);
 

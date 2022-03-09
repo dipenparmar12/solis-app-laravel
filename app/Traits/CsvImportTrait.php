@@ -64,6 +64,7 @@ trait CsvImportTrait
             for ($i = 1; $i < count($customerArr); $i ++)
             {
                 $modal::firstOrCreate($customerArr[$i]);
+//                $modal::firstOrCreate($customerArr[$i]);
             }
             return 'Jobi done or what ever';
         }

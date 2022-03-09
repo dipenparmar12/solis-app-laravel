@@ -36,13 +36,20 @@ Route::any('/me', [LoginController::class, 'me'])->name('me')->middleware('auth:
 
 // App routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/static/empty', [StaticDataApiController::class, 'empty'])->name('api.static.empty');
-    Route::get('/static/roles', [StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
-    Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes'])->name('api.static.property_types');
-    Route::get('/static/users', [StaticDataApiController::class, 'getUsers'])->name('api.static.users');
-    Route::get('/static/transactions', [StaticDataApiController::class, 'getTransactions'])->name('api.static.transactions');
-    Route::get('/static/projects', [StaticDataApiController::class, 'getProjects'])->name('api.static.projects');
-    Route::get('/static/dealers', [StaticDataApiController::class, 'getDealers'])->name('api.static.dealers');
+
+
+    // // Expenses
+    Route::controller(StaticDataApiController::class)->group(function () {
+        Route::get('/static/empty', 'empty')->name('api.static.empty');
+        Route::get('/static/roles', 'getRoles')->name('api.static.roles');
+        Route::get('/static/property_types', 'getPropertyTypes')->name('api.static.property_types');
+        Route::get('/static/users', 'getUsers')->name('api.static.users');
+        Route::get('/static/transactions', 'getTransactions')->name('api.static.transactions');
+        Route::get('/static/projects', 'getProjects')->name('api.static.projects');
+        Route::get('/static/dealers', 'getDealers')->name('api.static.dealers');
+        Route::get('/static/expense_categories', 'getExpenseCategories')->name('api.static.expense_categories');
+
+    });
 
     // Funds
     Route::get('/funds', [FundApiController::class, 'index'])->name('funds.index');
@@ -104,6 +111,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // // Expenses
     Route::controller(ExpenseApiController::class)->group(function () {
+        Route::get('/expenses', 'index')->name('api.expenses.get');
         Route::post('/expenses', 'store')->name('api.expenses.store');
     });
 
@@ -113,3 +121,15 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::group(['prefix' => 'test'], function () {
     return include(base_path('routes/test.php'));
 });
+
+
+
+
+//    Route::get('/static/empty', [StaticDataApiController::class, 'empty'])->name('api.static.empty');
+//    Route::get('/static/roles', [StaticDataApiController::class, 'getRoles'])->name('api.static.roles');
+//    Route::get('/static/property_types', [StaticDataApiController::class, 'getPropertyTypes'])->name('api.static.property_types');
+//    Route::get('/static/users', [StaticDataApiController::class, 'getUsers'])->name('api.static.users');
+//    Route::get('/static/transactions', [StaticDataApiController::class, 'getTransactions'])->name('api.static.transactions');
+//    Route::get('/static/projects', [StaticDataApiController::class, 'getProjects'])->name('api.static.projects');
+//    Route::get('/static/dealers', [StaticDataApiController::class, 'getDealers'])->name('api.static.dealers');
+//    Route::get('/static/expense_categories', [StaticDataApiController::class, 'getExpenseCategories'])->name('api.static.expense_categories');

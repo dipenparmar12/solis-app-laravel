@@ -38,18 +38,17 @@ class StoreExpenseRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => 'required|exists:projects,id',
-            'dealer_id' => 'required|exists:dealers,id',
+            'dealer_id' => 'nullable|required_if:category,project|exists:dealers,id',
+            'project_id' => 'nullable|required_if:category,project|exists:projects,id', /// if Category is project then,
             'transaction_id' => 'required|exists:transactions,id',
 
             'amount' => 'required|numeric|min:1|max:1000000',
+             // TODO::Expense Date should not be too much old (1,2 week max)
             'date' => 'required|date|after:2010-01-01',  /*date_format:Y-m-d|*/  // before:tomorrow
             'particular' => 'required|string',
             'category' => 'required|string|in:project,office,personal,other',
             'is_approved' => 'nullable|boolean',
-            'desc' => 'nullable|string',
-
-//            'project_id' => 'nullable|required_if:category,project|exists:projects,id', /// if Category is project then,
+            'desc' => 'nullable|string|required_if:category,other,personal,office',
 //            'date' => 'required|date|before:tomorrow|after:2010-01-01',
 
         ];
