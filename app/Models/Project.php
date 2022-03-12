@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
@@ -31,4 +33,19 @@ class Project extends Model
         'updated_by', 'deleted_by', 'deleted_at', 'created_at', 'updated_at',
     ];
 
+
+
+    /**
+     * Project -> has one fund
+     * @return BelongsTo
+     */
+    public function expenses(): HasMany
+    {
+        return $this
+            ->hasMany(Expense::class, 'project_id', 'id')
+//            ->select([
+//                'id', 'client', 'title'
+//            ])
+            ;
+    }
 }

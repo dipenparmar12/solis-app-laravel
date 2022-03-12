@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Expense;
 use App\Models\Project;
+use Facades\App\Services\QueryStrService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -143,6 +145,62 @@ class ProjectApiController extends Controller
             return $this->resError($th->getMessage());
         }
 
+    }
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function expenses(Project $project): JsonResponse
+    {
+        $project->load([
+            'expenses',
+            'expenses.expense_by_user',
+            'expenses.transaction',
+//            'expenses.dealer',
+        ]);
+        return $this->res($project);
+//
+//        try {
+//            $expenses = Expense::
+//            // select([ '*', ])->
+//            with([
+//                'project', 'dealer', 'transaction',
+//                'expense_by_user',
+//            ])
+//                ->latest()
+//                /* User Permission filter */
+//                ->when(!auth()->user()->hasAnyPermission('expense-list-all'), function ($qry) {
+//                    return $qry->where('expenses.expense_by', auth()->id());
+//                })
+//                /* Dynamic Order By -amount=desc, amount=acs */
+//                ->when(count($orderByPairs = QueryStrService::getOrderBy(Expense::class)) ?? 0, function ($qry) use ($orderByPairs) {
+//                    $orderByPairs->each(function ($pair) use ($qry) {
+//                        if ($pair && count($pair)) {
+//                            // Use the 'splat' to turn the pair into two arguments
+//                            $qry->orderBy(...$pair);
+//                        }
+//                    });
+//                })
+//                /* Filters */
+//                ->where(function ($qry) {
+//                    return $this->income_filters($qry);
+//                })
+//                /* Filters END */
+//                ->paginate(QueryStrService::determinePerPageRows())
+//                ->appends(request()->all());
+//
+////            $expenses->getCollection()->transform(function ($item) {
+////                $item->subRows = $item->emi_info;
+////                return $item;
+////            });
+//
+//            return $this->res($expenses, 'Expenses list.');
+//        } catch (Throwable $t) {
+//            return $this->resError(request()->all(), $t->getMessage());
+//        }
     }
 
 //    /**

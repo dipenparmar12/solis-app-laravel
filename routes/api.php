@@ -68,9 +68,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // Projects
-    Route::get('/projects', [ProjectApiController::class, 'index'])->name('projects.index');
-    Route::post('/projects', [ProjectApiController::class, 'store'])->name('projects.store');
-    Route::put('/projects/{project}', [ProjectApiController::class, 'update'])->name('projects.update');
+    Route::get('/projects', [ProjectApiController::class, 'index'])->name('api.projects.index');
+    Route::post('/projects', [ProjectApiController::class, 'store'])->name('api.projects.store');
+    Route::put('/projects/{project}', [ProjectApiController::class, 'update'])->name('api.projects.update');
+    Route::get('/projects/{project}/expenses', [ProjectApiController::class, 'expenses'])->name('api.projects.expenses');
 //    Route::get('/projects/{project}', [ProjectApiController::class, 'show'])->name('projects.show');
 
     // Transactions
@@ -83,7 +84,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/salaries', [SalaryApiController::class, 'index'])->name('api.salaries.get');
     Route::post('/salaries', [SalaryApiController::class, 'store'])->name('api.salaries.store');
     Route::delete('/salaries/{salary}', [SalaryApiController::class, 'destroy'])->name('api.salaries.destroy');
-
 
     // advances
     Route::get('/advances', [AdvanceApiController::class, 'index'])->name('api.advances.get');
@@ -113,6 +113,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(ExpenseApiController::class)->group(function () {
         Route::get('/expenses', 'index')->name('api.expenses.get');
         Route::post('/expenses', 'store')->name('api.expenses.store');
+        Route::post('/expenses/{expense}/approval', 'approval')->name('api.expenses.verdict');
     });
 
 });

@@ -90,6 +90,44 @@ class ExpenseApiController extends Controller
         }
     }
 
+    public function approval(Expense $expense): JsonResponse
+    {
+        request()->validate([
+            'verdict' => 'required|boolean',
+        ]);
+
+        $approval_verdict = request('verdict');
+
+        if (!auth()->user()->hasAnyPermission(['expense-approval'])) {
+            return $this->resError(['id' => $expense->id], "Unauthorized request!");
+        }
+
+        if ($expense->is_approved !== null) {
+            $approval_verdict = $expense->is_approved ? 'Approved' : 'Disapproved';
+            return $this->resError(['id' => $expense->id], "Expense id:{$expense->id} already {$approval_verdict}");
+        }
+
+        $expense->update([
+            'is_approved' => $approval_verdict,
+            'approval_by' => auth()->id(),
+        ]);
+
+        if ($approval_verdict) {
+//            //// TODO:IMP logic for user pettycase calculating
+//            $expense->user->fund -= $expense->amount;
+//            $expense->user->save();
+//            if ($expense->project_id) {
+//                if ($expense->project instanceof Project) {
+//                    $expense->project->expense += $expense->amount;
+//                    $expense->project->save();
+//                }
+//            }
+        }
+
+        return $this->res($expense, "Expense id {$expense->id} updated. ");
+    }
+
+
     private function income_filters($qry)
     {
         return $qry;

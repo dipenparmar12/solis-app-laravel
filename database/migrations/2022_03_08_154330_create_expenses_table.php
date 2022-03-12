@@ -19,15 +19,22 @@ return new class extends Migration
             $table->string('particular')->nullable();
             $table->bigInteger('amount')->default(2000);
             $table->date('date')->nullable(false);
-            $table->boolean('is_approved')->nullable();
             $table->text('desc')->nullable();
             $table->bigInteger('expense_by')->nullable();
             $table->string('category')->nullable(); // office,project,personal,other,fund_transfer // TODO DEV
 //            $table->boolean('in_favour')->nullable()->default();
 
             // // FK
-            $table->unsignedBigInteger('project_id')->nullable();
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('no action');
+            $table->boolean('is_approved')->nullable();
+            $table->foreignId('approval_by')
+                ->nullable()
+                ->constrained('users', 'id')
+                ->onDelete('no action');
+
+            $table->foreignId('project_id')
+                ->nullable()
+                ->constrained('projects', 'id')
+                ->onDelete('no action');
 
             $table->unsignedBigInteger('dealer_id')->nullable();
             $table->foreign('dealer_id')->references('id')->on('dealers')->onDelete('no action');
@@ -41,10 +48,6 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('deleted_by')->nullable();
             $table->unsignedInteger('created_by_origin')->nullable();
-
-//            $table->foreign('updated_by')->references('id')->on('users');
-//            $table->foreign('created_by')->references('id')->on('users');
-//            $table->foreign('deleted_by')->references('id')->on('users');
 
             $table->integer('status')->nullable()->default(1);
             $table->timestamps();

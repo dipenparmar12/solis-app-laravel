@@ -28,8 +28,8 @@ class ProjectFactory extends Factory
             , 'wip' => $this->faker->randomElement([1, 0])
             , 'client' => $this->faker->name
             , 'address' => $this->faker->paragraph
-            , 'income' => 0
-            , 'expense' => 0
+            , 'income' => rand(100, 10000)
+            , 'expense' => rand(100, 10000)
         ];
     }
 }
