@@ -21,8 +21,7 @@ class DealerSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
         Dealer::truncate();
-        $this->importCsv(New Dealer(), database_path('csv\dealers.csv') );
+        $this->importCsv(new Dealer(), database_path('csv' . DIRECTORY_SEPARATOR . 'dealers.csv'));
         Schema::enableForeignKeyConstraints();
     }
-
 }

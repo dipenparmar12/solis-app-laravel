@@ -20,7 +20,7 @@ class EstimateSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
         Estimate::truncate();
-        $this->importCsv(New Estimate(), database_path('csv\estimates.csv') );
+        $this->importCsv(new Estimate(), database_path('csv' . DIRECTORY_SEPARATOR . 'estimates.csv'));
         Schema::enableForeignKeyConstraints();
     }
 }

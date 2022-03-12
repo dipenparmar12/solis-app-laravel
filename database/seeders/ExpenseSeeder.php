@@ -21,7 +21,7 @@ class ExpenseSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
         Expense::truncate();
-        $this->importCsv(new Expense(), database_path('csv\expenses.csv'));
+        $this->importCsv(new Expense(), database_path('csv' . DIRECTORY_SEPARATOR . 'expenses.csv'));
         Schema::enableForeignKeyConstraints();
     }
 }
