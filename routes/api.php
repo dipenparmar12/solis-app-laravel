@@ -72,6 +72,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/projects', [ProjectApiController::class, 'store'])->name('api.projects.store');
     Route::put('/projects/{project}', [ProjectApiController::class, 'update'])->name('api.projects.update');
     Route::get('/projects/{project}/expenses', [ProjectApiController::class, 'expenses'])->name('api.projects.expenses');
+    Route::get('/projects/{project}/estimates', [ProjectApiController::class, 'estimates'])->name('api.projects.estimates');
+    Route::get('/projects/{project}/incomes', [ProjectApiController::class, 'incomes'])->name('api.projects.incomes');
 //    Route::get('/projects/{project}', [ProjectApiController::class, 'show'])->name('projects.show');
 
     // Transactions

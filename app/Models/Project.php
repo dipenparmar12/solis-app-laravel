@@ -34,18 +34,31 @@ class Project extends Model
     ];
 
 
-
     /**
-     * Project -> has one fund
-     * @return BelongsTo
+     * Project -> can have expenses
      */
     public function expenses(): HasMany
     {
         return $this
-            ->hasMany(Expense::class, 'project_id', 'id')
-//            ->select([
-//                'id', 'client', 'title'
-//            ])
-            ;
+            ->hasMany(Expense::class, 'project_id', 'id');
+    }
+
+
+    /**
+     * Project -> Estimates
+     */
+    public function estimates(): HasMany
+    {
+        return $this
+            ->hasMany(Estimate::class, 'project_id', 'id');
+    }
+
+    /**
+     * Project -> can receive incomes
+     */
+    public function incomes(): HasMany
+    {
+        return $this
+            ->hasMany(Income::class, 'project_id', 'id');
     }
 }

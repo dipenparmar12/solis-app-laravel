@@ -8,7 +8,9 @@ use App\Models\Project;
 use Facades\App\Services\QueryStrService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
 
 class ProjectApiController extends Controller
@@ -16,6 +18,7 @@ class ProjectApiController extends Controller
     /**
      * Display a listing of the resource.
      * @see https://stackoverflow.com/a/48091600/8592918
+     * @throws NotFoundExceptionInterface
      */
     public function index(): JsonResponse
     {
@@ -34,21 +37,12 @@ class ProjectApiController extends Controller
             'projects.client',
             'projects.address',
         ])
+            ->withSum(['incomes', 'expenses', 'estimates'], 'amount')
 //            ->when(!auth()->user()->hasPermissionTo('project-list-all'), function ($query) {
 //                return auth()->user()->hasPermissionTo('project-list-finish') ? $query->whereWip(0) : $query->whereWip(1);
 //            })
-
-            // /* filters & search queries */
             ->where(function ($qry) {
-                $qry->when(is_numeric(request('wip')), function ($query) {
-                    $query->where('wip', request('wip') == 0 ? 0 : 1);
-                });
-                $qry->when(request('title'), function ($qry, $v) {
-                    $qry->where('title', 'like', '%' . request('title') . '%');
-                });
-                $qry->when(request('client'), function ($qry, $v) {
-                    $qry->where('client', 'like', '%' . request('client') . '%');
-                });
+                return $this->project_filters($qry);
             })
             ->latest()
             ->paginate(request('per_page') ?? 50)
@@ -149,80 +143,95 @@ class ProjectApiController extends Controller
 
 
     /**
-     * Display a listing of the resource.
-     *
+     * Get all expenses
+     * @param Project $project
      * @return JsonResponse
      */
     public function expenses(Project $project): JsonResponse
     {
-        $project->load([
-            'expenses',
-            'expenses.expense_by_user',
-            'expenses.transaction',
-//            'expenses.dealer',
-        ]);
-        return $this->res($project);
-//
-//        try {
-//            $expenses = Expense::
-//            // select([ '*', ])->
-//            with([
-//                'project', 'dealer', 'transaction',
-//                'expense_by_user',
-//            ])
-//                ->latest()
-//                /* User Permission filter */
-//                ->when(!auth()->user()->hasAnyPermission('expense-list-all'), function ($qry) {
-//                    return $qry->where('expenses.expense_by', auth()->id());
-//                })
-//                /* Dynamic Order By -amount=desc, amount=acs */
-//                ->when(count($orderByPairs = QueryStrService::getOrderBy(Expense::class)) ?? 0, function ($qry) use ($orderByPairs) {
-//                    $orderByPairs->each(function ($pair) use ($qry) {
-//                        if ($pair && count($pair)) {
-//                            // Use the 'splat' to turn the pair into two arguments
-//                            $qry->orderBy(...$pair);
-//                        }
-//                    });
-//                })
-//                /* Filters */
-//                ->where(function ($qry) {
-//                    return $this->income_filters($qry);
-//                })
-//                /* Filters END */
-//                ->paginate(QueryStrService::determinePerPageRows())
-//                ->appends(request()->all());
-//
-////            $expenses->getCollection()->transform(function ($item) {
-////                $item->subRows = $item->emi_info;
-////                return $item;
-////            });
-//
-//            return $this->res($expenses, 'Expenses list.');
-//        } catch (Throwable $t) {
-//            return $this->resError(request()->all(), $t->getMessage());
-//        }
+        try {
+
+            $project->load([
+                'expenses',
+                'expenses.expense_by_user',
+                'expenses.transaction',
+                'expenses.dealer',
+            ]);
+
+            return $this->res($project);
+
+        } catch (Throwable $t) {
+            return $this->resError(request()->all(), $t->getMessage());
+        }
     }
 
-//    /**
-//     * Remove the specified resource from storage.
-//     *
-//     * @param  int  $id
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function destroy($id)
-//    {
-//        //
-//    }
+    /**
+     * Project estimates
+     * @param Project $project
+     * @return JsonResponse
+     */
+    public function estimates(Project $project): JsonResponse
+    {
+        try {
+            $project->load([
+                'estimates',
+                'estimates.dealer',
+            ]);
+            return $this->res($project);
+        } catch (Throwable $t) {
+            return $this->resError(request()->all(), $t->getMessage());
+        }
+    }
 
-//    /**
-//     * Display the specified resource.
-//     *
-//     * @param  int  $id
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function show($id)
-//    {
-//        //
-//    }
+    /**
+     * Project incomes
+     * @param Project $project
+     * @return JsonResponse
+     */
+    public function incomes(Project $project): JsonResponse
+    {
+        try {
+            $project->load([
+                'incomes',
+                'incomes.received_by_user',
+            ]);
+            return $this->res($project);
+        } catch (Throwable $t) {
+            return $this->resError(request()->all(), $t->getMessage());
+        }
+    }
+
+
+    /**
+     * @throws NotFoundExceptionInterface
+     */
+    private function project_filters($qry)
+    {
+        return $qry->when(function ($qry) {
+            $qry->when(is_numeric(request('wip')), function ($query) {
+                $query->where('wip', request('wip') == 0 ? 0 : 1);
+            });
+        })
+            ->where(function ($qry) {
+                $qry->when(is_numeric(request('wip')), function ($query) {
+                    $query->where('wip', request('wip') == 0 ? 0 : 1);
+                });
+                $qry->when(request('title'), function ($qry, $v) {
+                    $qry->where('title', 'like', '%' . request('title') . '%');
+                });
+                $qry->when(request('client'), function ($qry, $v) {
+                    $qry->where('client', 'like', '%' . request('client') . '%');
+                });
+            });
+    }
 
 }
+
+
+//            $qry->withSum(['expenses' => function ($query) {
+//                $query->selectRaw('SUM(amount) as amount_sum');
+//            }], 'amount')
+//            $qry->withSum(['incomes' => function ($query) {
+//                return $query;
+//                // $query->selectRaw('SUM(amount) as income_sum');
+//            }], 'amount')
