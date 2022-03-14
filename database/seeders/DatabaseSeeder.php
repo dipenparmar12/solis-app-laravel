@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             FundSeeder::class,
             EstimateSeeder::class,
             ExpenseSeeder::class,
+            PaymentSeeder::class,
             // AdvanceSeeder::class, // // included in UsersSeeder
         ]);
 

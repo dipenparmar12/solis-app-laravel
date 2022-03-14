@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreExpenseRequest extends FormRequest
+class StorePaymentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -38,19 +38,15 @@ class StoreExpenseRequest extends FormRequest
     public function rules()
     {
         return [
-            'dealer_id' => 'nullable|required_if:category,project|exists:dealers,id',
-            'project_id' => 'nullable|required_if:category,project|exists:projects,id', /// if Category is project then,
+            'dealer_id' => 'required|exists:dealers,id',
             'transaction_id' => 'required|exists:transactions,id',
 
             'amount' => 'required|numeric|min:1|max:1000000',
-             // TODO::Expense Date should not be too much old (1,2 week max)
+            // TODO::Expense Date should not be too much old (1,2 week max)
             'date' => 'required|date|after:2010-01-01',  /*date_format:Y-m-d|*/  // before:tomorrow
             'particular' => 'required|string',
-            'category' => 'required|string|in:project,office,personal,dealer,other',
             'is_approved' => 'nullable|boolean',
             'desc' => 'nullable|string|required_if:category,other,personal,office,dealer',
-//            'date' => 'required|date|before:tomorrow|after:2010-01-01',
-
         ];
     }
 }

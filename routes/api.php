@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\EstimateApiController;
 use App\Http\Controllers\Api\ExpenseApiController;
 use App\Http\Controllers\Api\FundApiController;
 use App\Http\Controllers\Api\IncomeApiController;
+use App\Http\Controllers\Api\PaymentApiController;
 use App\Http\Controllers\Api\ProjectApiController;
 use App\Http\Controllers\Api\SalaryApiController;
 use App\Http\Controllers\Api\StaticDataApiController;
@@ -117,6 +118,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/expenses', 'index')->name('api.expenses.get');
         Route::post('/expenses', 'store')->name('api.expenses.store');
         Route::post('/expenses/{expense}/approval', 'approval')->name('api.expenses.verdict');
+    });
+
+    // // Payments
+    Route::controller(PaymentApiController::class)->group(function () {
+        Route::get('/payments', 'index')->name('api.payments.get');
+        Route::post('/payments', 'store')->name('api.payments.store');
     });
 
 });

@@ -106,6 +106,14 @@ class DatabaseState
             'Salary edit all' => 'salary-edit-all',
             'Salary edit self' => 'salary-edit-self',
 
+            'Payment Add' => 'payment-list-all',
+//            'Payment list all' => 'payment-list-all',
+//            'Payment list self' => 'payment-list-self',
+//            'Payment View Self' => 'payment-show-self',
+//            'Payment View all' => 'payment-show-all',
+//            'Payment edit all' => 'payment-edit-all',
+//            'Payment edit self' => 'payment-edit-self',
+
             'Advance Add' => 'advance-create',
             'Advance list all' => 'advance-list-all',
             'Advance list self' => 'advance-list-self',
