@@ -33,7 +33,6 @@ class Project extends Model
         'updated_by', 'deleted_by', 'deleted_at', 'created_at', 'updated_at',
     ];
 
-
     /**
      * Project -> can have expenses
      */

@@ -1,0 +1,160 @@
+{
+	"info": {
+		"_postman_id": "484d51cd-1aaa-485c-98b5-639cb1214b0b",
+		"name": "Auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"try {\r",
+							"    const res = pm?.response?.json()\r",
+							"    console.log(res)\r",
+							"    res?.token && pm.environment.set('token', res?.token)\r",
+							"}\r",
+							"catch (err) {\r",
+							"\r",
+							"}\r",
+							"finally {\r",
+							"    \r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "dipensavji@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Admin@123",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API}}/sanctum/login",
+					"host": [
+						"{{API}}"
+					],
+					"path": [
+						"sanctum",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{API}}/sanctum/logout",
+					"host": [
+						"{{API}}"
+					],
+					"path": [
+						"sanctum",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth User",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{API}}/me",
+					"host": [
+						"{{API}}"
+					],
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

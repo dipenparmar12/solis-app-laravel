@@ -102,6 +102,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // // Dealers
     Route::controller(DealerApiController::class)->group(function () {
         Route::get('/dealers', 'index')->name('api.dealers.get');
+        Route::get('/dealers/{dealer}/balance_sheet', 'balance_sheet')->name('api.dealers.balance_sheet');
         // Route::post('/dealers', 'store')->name('api.dealers.store');
     });
 

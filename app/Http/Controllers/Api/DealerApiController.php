@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreDealerRequest;
-use App\Http\Requests\UpdateDealerRequest;
 use App\Models\Dealer;
 use Facades\App\Services\QueryStrService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class DealerApiController extends Controller
@@ -14,14 +14,15 @@ class DealerApiController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         try {
             $dealers = Dealer::
             // select([ '*', ])->
-                latest()
+            latest()
+                ->withSum(['estimates', 'expenses'], 'amount')
                 ->paginate(QueryStrService::determinePerPageRows())
                 ->appends(request()->all());
 
@@ -32,10 +33,69 @@ class DealerApiController extends Controller
 
     }
 
+
+    /**
+     * Merged Estimates & Expenses
+     * @param Dealer $dealer
+     * @return JsonResponse
+     */
+    public function balance_sheet(Dealer $dealer): JsonResponse
+    {
+        try {
+            $data = [];
+            $dealer->load([
+                'estimates',
+                'estimates.project',
+                'expenses.expense_by_user',
+//                'expenses.project',
+                'expenses',
+            ]);
+
+            $estimates = collect()
+                ->merge($dealer->estimates)
+                ->map(function ($item) {
+                    $item->date = $item->s_date;
+                    $item->resource = 'estimate';
+                    // unset($item->s_date);
+                    return $item;
+                });
+
+            $expenses = collect()
+                ->merge($dealer->expenses)
+                ->map(function ($item) {
+                    $item->resource = 'expense';
+                    return $item;
+                });
+
+            $dealer->balance_sheet = collect()
+                ->merge($estimates)
+                ->merge($expenses)
+                ->sortByDesc('date')
+                ->values()
+//                ->sort(function ($a, $b) {
+//                    if ($a->date === $b->date) {
+//                        return strtotime($a->date) < strtotime($b->date);
+//                    }
+//                    return $a->total < $b->total;
+//                })
+            ;
+
+            return $this->res($dealer);
+        } catch (Throwable $t) {
+            return $this->resError(request()->all(), $t->getMessage());
+        }
+    }
+
     private function filters($qry)
     {
         return $qry;
     }
+
+}
+
+
+
+
 
 //    /**
 //     * Store a newly created resource in storage.
@@ -48,12 +108,12 @@ class DealerApiController extends Controller
 //        //
 //    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Dealer  $dealer
-     * @return \Illuminate\Http\Response
-     */
+/**
+ * Display the specified resource.
+ *
+ * @param Dealer $dealer
+ * @return
+ */
 //    public function show(Dealer $dealer)
 //    {
 //        //
@@ -82,4 +142,3 @@ class DealerApiController extends Controller
 //    {
 //        //
 //    }
-}
