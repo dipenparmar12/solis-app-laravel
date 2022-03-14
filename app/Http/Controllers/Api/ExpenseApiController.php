@@ -82,7 +82,7 @@ class ExpenseApiController extends Controller
             $record->expense_by = auth()->id();
             $record->save();
 
-            return $this->res($record, 'New record created.');
+            return $this->res($record, " New record created {$record->id}.");
         } catch (Throwable $th) {
             //throw $th;
             optional($record)->delete();

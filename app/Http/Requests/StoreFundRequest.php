@@ -29,7 +29,15 @@ class StoreFundRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'user_id' => 'required|exists:users,id', // TODO::validation status=1
+            'amount' => 'required|numeric|min:1|max:1000000',
+            'transaction_id' => 'required|exists:transactions,id',
+
+            // TODO::Expense Date should not be too much old (1,2 week max)
+            'date' => 'required|date|before:tomorrow|after:2010-01-01',  /*date_format:Y-m-d|*/  // before:tomorrow
+
+            'project_id' => 'nullable|exists:projects,id',
+            'desc' => 'nullable|string',
         ];
     }
 }

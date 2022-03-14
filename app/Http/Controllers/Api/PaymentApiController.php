@@ -82,7 +82,8 @@ class PaymentApiController extends Controller
             $record->payment_by = auth()->id();
             $record->save();
 
-            return $this->res($record, "{$record->id}: New record created.");
+            return $this->res($record, " New record created {$record->id}.");
+
         } catch (Throwable $th) {
             //throw $th;
             optional($record)->delete();

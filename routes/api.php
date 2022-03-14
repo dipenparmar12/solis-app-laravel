@@ -49,14 +49,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/static/projects', 'getProjects')->name('api.static.projects');
         Route::get('/static/dealers', 'getDealers')->name('api.static.dealers');
         Route::get('/static/expense_categories', 'getExpenseCategories')->name('api.static.expense_categories');
-
     });
 
     // Funds
-    Route::get('/funds', [FundApiController::class, 'index'])->name('funds.index');
-//    Route::get('/funds/{fund}', [FundApiController::class, 'show'])->name('funds.show');
-//    Route::post('/funds', [FundApiController::class, 'store'])->name('funds.store');
-//    Route::put('/funds/{funds}', [FundApiController::class, 'update'])->name('funds.update');
+    Route::get('/funds', [FundApiController::class, 'index'])->name('api.funds.index');
+    Route::post('/funds', [FundApiController::class, 'store'])->name('api.funds.store');
+//    Route::get('/funds/{fund}', [FundApiController::class, 'show'])->name('fapi.unds.show');
+//    Route::put('/funds/{funds}', [FundApiController::class, 'update'])->name('fapi.unds.update');
 
     // Users
     Route::get('/users', [UserApiController::class, 'index'])->name('users.index');

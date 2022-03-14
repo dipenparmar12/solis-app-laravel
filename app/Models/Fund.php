@@ -71,19 +71,6 @@ class Fund extends Model
     }
 
     /**
-     * Project -> has one fund
-     * @return BelongsTo
-     */
-    public function project(): BelongsTo
-    {
-        return $this
-            ->belongsTo(Project::class, 'project_id', 'id')
-            ->select([
-                'id', 'client', 'title'
-            ]);
-    }
-
-    /**
      * @return BelongsTo
      */
     public function transaction(): BelongsTo

@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreFundRequest;
 use App\Models\Fund;
 use App\Scopes\OrderByScope;
 use Illuminate\Http\JsonResponse;
 use Facades\App\Services\QueryStrService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class FundApiController extends Controller
 {
@@ -32,7 +36,9 @@ class FundApiController extends Controller
         $data = Fund::when(!auth()->user()->hasAnyPermission(['fund-list-all']), function ($qry) {
             return $qry->where('user_id', auth()->id());
         })
-            ->with(['given_to', 'received_from', 'project', 'transaction'])
+            ->with([
+                    'given_to', 'received_from', 'transaction']
+            )
             /* Filters */
             ->where(function ($qry) {
                 $qry->when(request('from_date'), function ($qry) {
@@ -54,7 +60,6 @@ class FundApiController extends Controller
 //                });
             })
             /* Filters END */
-
             /* Dynamic Order By -amount->desc, amount->acs */
             ->when(count($orderByPairs = QueryStrService::getOrderBy(Fund::class)) ?? 0, function ($qry) use ($orderByPairs) {
                 $orderByPairs->each(function ($pair) use ($qry) {
@@ -70,69 +75,46 @@ class FundApiController extends Controller
 
         return $this->res($data);
 
-//        $project_id = request()->query('project_id');
-//        $user_id = request()->query('user_id');
-//        $from_date = request()->query('from_date');
-//        $to_date = request()->query('to_date');
-//
-//        $validator = Validator::make(request()->all(), [
-//            'project_id' => 'nullable|exists:projects,id',
-//            'user_id' => 'nullable|exists:users,id',
-//            'from_date' => 'nullable|date',
-//            'to_date' => 'nullable|date|after:from_date',
-//        ]);
-//
-//        if ($validator->fails()) {
-//            return $this->resError($validator->messages());
-//        }
-
-
-//        $data = Fund::select([
-//            'funds.id',
-//        ])
-//            ->latest()
-//            ->paginate(request('per_page') ?? 50)
-//            ->appends(request()->all());
-//        return $this->res($data);
     }
 
-//    /**
-//     * Show the form for creating a new resource.
-//     *
-//     * @return Response
-//     */
-//    public function create()
-//    {
-//        //
-//    }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StoreFundRequest $request
+     * @return JsonResponse
+     */
+    public function store(StoreFundRequest $request): JsonResponse
+    {
+        $fund = null;
+        try {
+            $fund = new Fund();
+            DB::transaction(function () use ($fund) {
 
-//    /**
-//     * Store a newly created resource in storage.
-//     *
-//     * @param StoreFundRequest $request
-//     * @return Response
-//     */
-//    public function store(StoreFundRequest $request)
-//    {
-//        //[
-//            "amount" => "required|numeric|min:1",
-//            "date" => "date|before:tomorrow|after:2010-01-01",
-//            "user_id" => "required|exists:users,id",
-//            "transaction_id" => "required|exists:transactions,id",
-//            "project_id" => "nullable|exists:projects,id",
-//        ]
-//    }
-//
-//    /**
-//     * Display the specified resource.
-//     *
-//     * @param Fund $fund
-//     * @return Response
-//     */
-//    public function show(Fund $fund)
-//    {
-//        //
-//    }
+                $fund->user_id = request('user_id');
+                $fund->amount = request('amount');
+                $fund->date = request('date');
+                $fund->transaction_id = request('transaction_id');
+                $fund->desc = request('desc');
+                $fund->save();
+
+                if ($fund) {
+                    $fund->given_to->fund += $fund->amount;
+                    $fund->given_to->save();
+                }
+            });
+            return $this->res($fund, " New record created {$fund->id}.");
+        } catch (Throwable $e) {
+            $log_msg = ['Line:' => $e->getLine(), 'Message:' => $e->getMessage(), 'Code:' => $e->getCode()];
+            Log::error($log_msg);
+            //throw $th;
+            optional($fund)->delete();
+            return $this->resError($e->getMessage());
+        }
+    }
+
+}
+
+
 //
 //    /**
 //     * Show the form for editing the specified resource.
@@ -167,4 +149,3 @@ class FundApiController extends Controller
 //    {
 //        //
 //    }
-}

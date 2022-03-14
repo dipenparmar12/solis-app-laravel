@@ -18,7 +18,6 @@ class CreateFundsTable extends Migration
 
             $table->double('amount');
             $table->dateTime('date');
-            /*$table->boolean('is_approved')->nullable()->default(1);*/
             /*$table->boolean('is_approved')->nullable()->default(1)->comment = 'Deprecated not functional right now';*/
 
             // FK's
@@ -29,7 +28,7 @@ class CreateFundsTable extends Migration
             $table->unsignedBigInteger('project_id')->nullable();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('no action');
 
-            $table->text('pic')->nullable();
+            $table->text('desc')->nullable();
 
             /// created,updated,Delete By
             $table->unsignedInteger('created_by')->nullable();
