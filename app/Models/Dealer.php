@@ -45,4 +45,13 @@ class Dealer extends Model
             ->hasMany(Expense::class, 'dealer_id', 'id');
     }
 
+    /**
+     * Dealer -> Estimates
+     */
+    public function payments(): HasMany
+    {
+        return $this
+            ->hasMany(Payment::class, 'dealer_id','id');
+    }
+
 }

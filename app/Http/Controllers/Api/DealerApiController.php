@@ -22,7 +22,7 @@ class DealerApiController extends Controller
             $dealers = Dealer::
             // select([ '*', ])->
             latest()
-                ->withSum(['estimates', 'expenses'], 'amount')
+                ->withSum(['estimates', 'expenses', 'payments'], 'amount')
                 ->paginate(QueryStrService::determinePerPageRows())
                 ->appends(request()->all());
 
@@ -47,8 +47,8 @@ class DealerApiController extends Controller
                 'estimates',
                 'estimates.project',
                 'expenses.expense_by_user',
-//                'expenses.project',
                 'expenses',
+                'payments',
             ]);
 
             $estimates = collect()
@@ -67,17 +67,19 @@ class DealerApiController extends Controller
                     return $item;
                 });
 
+            $payments = collect()
+                ->merge($dealer->payments)
+                ->map(function ($item) {
+                    $item->resource = 'payment';
+                    return $item;
+                });
+
             $dealer->balance_sheet = collect()
                 ->merge($estimates)
                 ->merge($expenses)
+                ->merge($payments)
                 ->sortByDesc('date')
                 ->values()
-//                ->sort(function ($a, $b) {
-//                    if ($a->date === $b->date) {
-//                        return strtotime($a->date) < strtotime($b->date);
-//                    }
-//                    return $a->total < $b->total;
-//                })
             ;
 
             return $this->res($dealer);
