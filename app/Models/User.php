@@ -61,6 +61,8 @@ class User extends Authenticatable implements HasMedia
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
         "email_verified_at", "updated_by", "deleted_by", "deleted_at", "created_at", "updated_at",
     ];
 
@@ -74,6 +76,13 @@ class User extends Authenticatable implements HasMedia
     ];
 
     protected $dates = ['deleted_at', 'dob', 'doj'];
+
+    public const ORDERS_BY_ALLOWED = [
+        'name', 'email', 'password',
+        'mobile', 'dob', 'pic', 'address', 'salary', 'role_id', 'doj', 'link', 'user_type',
+        'active',
+        'is_abstract'
+    ];
 
     public static function boot()
     {
@@ -89,5 +98,19 @@ class User extends Authenticatable implements HasMedia
     public function salaries(): HasMany
     {
         return $this->hasMany(Salary::class, 'user_id', 'id');
+    }
+
+    public function funds(): HasMany
+    {
+        return $this
+            ->hasMany(Fund::class, 'user_id', 'id')
+            ->orderByDesc('date');
+    }
+
+    public function expenses(): HasMany
+    {
+        return $this
+            ->hasMany(Expense::class, 'expense_by', 'id')
+            ->orderByDesc('date');
     }
 }

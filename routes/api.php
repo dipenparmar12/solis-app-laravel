@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{user}', [UserApiController::class, 'show'])->name('users.show');
     Route::post('/users', [UserApiController::class, 'store'])->name('users.store');
     Route::put('/users/{any_user}', [UserApiController::class, 'update'])->name('users.update');
+    Route::get('/users/fund/summary', [UserApiController::class, 'fund_summary'])->name('users.update');
 
     /* User Advances */
     Route::get('/users/{user}/advances', [UserApiController::class, 'advances'])->name('api.users.advances');

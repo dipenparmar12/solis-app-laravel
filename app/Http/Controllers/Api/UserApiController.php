@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Advance;
 use App\Models\User;
 use App\Scopes\IsActiveScope;
+use Facades\App\Services\QueryStrService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -28,8 +29,22 @@ class UserApiController extends Controller
     {
         $users = User::withoutGlobalScope(IsActiveScope::class)
             ->latest()
-            ->with(['advances', 'salaries'])
-//            ->getMedia(User::PIC_MEDIA_COLLECTION)
+//            ->with(['advances', 'salaries'])
+            ->withSum(['funds', 'expenses',], 'amount')
+            ->withSum([
+                'expenses as expenses_pending_approval' => function ($query) {
+                    return $query->whereNull('is_approved');
+                }
+            ], 'amount')
+            /* Dynamic Order By -amount=desc, amount=acs */
+            ->when(count($orderByPairs = QueryStrService::getOrderBy(User::class)) ?? 0, function ($qry) use ($orderByPairs) {
+                $orderByPairs->each(function ($pair) use ($qry) {
+                    if ($pair && count($pair)) {
+                        // Use the 'splat' to turn the pair into two arguments
+                        $qry->orderBy(...$pair);
+                    }
+                });
+            })
             ->paginate(request('per_page') ?? 20)
             ->appends(request()->all());
 
@@ -185,4 +200,23 @@ class UserApiController extends Controller
         return $this->res($advances, 'Advance summary');
     }
 
+    public function fund_summary()
+    {
+        $data = User::select([
+            'users.id',
+            'users.name',
+        ])
+//            ->with([
+//                'funds','expenses',
+//            ])
+            ->withSum(['funds', 'expenses',], 'amount')
+            ->withSum([
+                'expenses as expenses_pending_approval' => function ($query) {
+                    return $query->whereNull('is_approved');
+                }
+            ], 'amount')
+            ->get();
+
+        return $this->res($data);
+    }
 }

@@ -34,7 +34,6 @@ class Expense extends Model
         'project_id', 'dealer_id', 'transaction_id',
     ];
 
-
     /**
      * dealer -> has one fund
      * @return BelongsTo
