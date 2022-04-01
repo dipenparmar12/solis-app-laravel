@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\DatabaseState\DatabaseState;
-use Database\State\PermissionsDatabaseState;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;

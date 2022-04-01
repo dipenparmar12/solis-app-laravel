@@ -81,6 +81,7 @@ class SalaryApiController extends Controller
                 /* Filters END */
                 ->paginate(QueryStrService::determinePerPageRows())
                 ->appends(request()->all());
+
 //            $advances->getCollection()->transform(function ($item) {
 //                $item->subRows = $item->emi_info;
 //                return $item;

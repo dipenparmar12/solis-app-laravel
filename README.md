@@ -1,6 +1,7 @@
 
 
 
+
 ## PHP Laravel Backend application
 
 ## Start application
@@ -127,6 +128,10 @@ xdebug.log_level=10
 #### Docs
 
 -   Create Everything `php artisan make:modal Temp -a`
+
+
+## Official docs
+- Laravel-Permissions https://spatie.be/docs/laravel-permission/v5/introduction
 
 ## sources
 

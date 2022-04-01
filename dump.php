@@ -25,7 +25,17 @@ if (request()->hasFile('files')) {
         });
 }
 
-#______ Test
+#______ Eloquent transform
+
+$modal->transform(function ($item, $i) {
+    return $item;
+});
+
+$modal->getCollection()->transform(function ($item) {
+    $item->subRows = $item->emi_info;
+    return $item;
+});
+
 #______ Test
 #______ Test
 #______ Test
@@ -39,4 +49,9 @@ class Modal {
     public function clearMediaCollection(string $string){}
     public function addAllMediaFromRequest(mixed $files): static {return $this;}
     public function each(Closure $param) { }
+    public function getCollection() {}
+    public function transform(Closure $param): static {return $this;}
+
 }
+
+

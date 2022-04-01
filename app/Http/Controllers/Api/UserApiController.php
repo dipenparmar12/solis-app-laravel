@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Advance;
+use App\Models\Expense;
+use App\Models\Fund;
 use App\Models\User;
 use App\Scopes\IsActiveScope;
 use Facades\App\Services\QueryStrService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Dexpenses;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use function request;
@@ -45,7 +49,7 @@ class UserApiController extends Controller
                     }
                 });
             })
-            ->paginate(request('per_page') ?? 20)
+            ->paginate(QueryStrService::determinePerPageRows())
             ->appends(request()->all());
 
         return $this->res($users);
@@ -196,11 +200,62 @@ class UserApiController extends Controller
             ->where('user_id', $user->id)
             ->where('settled', 0) // 0 -> Pending amount (outstanding)
             ->orderByDesc('date')
+
             ->get();
+
         return $this->res($advances, 'Advance summary');
     }
 
-    public function fund_summary()
+
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function expenses(Request $request, User $user): JsonResponse
+    {
+        $advances = Expense::select([
+            'id', 'expense_by', 'amount', 'date',
+            'particular', 'category',
+            'project_id', 'dealer_id', 'transaction_id',
+        ])
+            ->where('expense_by', $user->id)
+             ->with([
+                 'project', 'dealer', 'transaction',
+             ])
+            ->orderByDesc('date')
+            ->paginate(QueryStrService::determinePerPageRows())
+            ->appends(request()->all());
+
+        return $this->res($advances, 'User Expenses.');
+    }
+
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function funds(Request $request, User $user): JsonResponse
+    {
+        $advances = Fund::select([
+           'id', 'user_id', 'transaction_id', 'project_id',
+            'amount', 'date',
+//            'status',
+        ])
+            ->where('user_id', $user->id)
+             ->with([
+                 'transaction',
+             ])
+            ->orderByDesc('date')
+            ->paginate(QueryStrService::determinePerPageRows())
+            ->appends(request()->all());
+
+        return $this->res($advances, 'User PettyCash.');
+    }
+
+    public function fund_summary(): JsonResponse
     {
         $data = User::select([
             'users.id',
@@ -219,4 +274,53 @@ class UserApiController extends Controller
 
         return $this->res($data);
     }
+
 }
+
+
+
+/*
+
+        $funds = Fund::select([
+            'user_id',
+            'amount',
+            'date',
+            'transaction_id', 'project_id',
+            'status',
+        ])
+            ->when(!auth()->user()->hasAnyPermission(['fund-list-all']), function ($qry) {
+                return $qry->where('user_id', auth()->id());
+            })
+            ->where('funds.user_id', $user->id)
+//            ->with([
+//                'received_from', 'transaction'
+//            ])
+            ->paginate(QueryStrService::determinePerPageRows())
+            ->appends(request()->all());
+
+        $expenses = Expense::select([
+            'expense_by as user_id',
+            'amount',
+            'date',
+            'project_id', 'dealer_id', 'transaction_id',
+            'is_approved', 'particular',
+            'desc', 'category',
+            'status',
+        ])
+            ->when(!auth()->user()->hasAnyPermission(['expense-list-all']), function ($qry) {
+                return $qry->where('expense_by', auth()->id());
+            })
+            ->where('expenses.expense_by', $user->id)
+//            ->with([
+//                'project', 'transaction', 'dealer'
+//            ])
+            ->paginate(QueryStrService::determinePerPageRows())
+            ->appends(request()->all())
+            ;
+
+            $data = collect()
+                ->merge($funds)
+                ->merge($expenses)
+                ;
+        return $this->res($data);
+ */

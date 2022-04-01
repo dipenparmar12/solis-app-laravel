@@ -39,6 +39,7 @@ class UserSeeder extends Seeder
                 'link' => 'www.facebook.com/dipen.parmar.186'
             ]);
             $user->syncPermissions($permissions);
+
             $user->syncRoles($roles);
             // for ($i = 0, $iMax = random_int(1, 4); $i <= $iMax; $i++) {
             //     $user->assignRole(['team', Role::orderByRaw('RAND()')->first()->name]);

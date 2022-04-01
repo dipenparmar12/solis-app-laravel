@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AdvanceApiController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
+use App\Http\Controllers\Api\Auth\PermissionApiController;
 use App\Http\Controllers\Api\DealerApiController;
 use App\Http\Controllers\Api\EstimateApiController;
 use App\Http\Controllers\Api\ExpenseApiController;
@@ -64,8 +65,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/users/{any_user}', [UserApiController::class, 'update'])->name('users.update');
     Route::get('/users/fund/summary', [UserApiController::class, 'fund_summary'])->name('users.update');
 
-    /* User Advances */
+    /* User Relations  */
     Route::get('/users/{user}/advances', [UserApiController::class, 'advances'])->name('api.users.advances');
+    Route::get('/users/{user}/expenses', [UserApiController::class, 'expenses'])->name('api.users.expenses');
+    Route::get('/users/{user}/funds', [UserApiController::class, 'funds'])->name('api.users.funds');
 
 
     // Projects
@@ -124,6 +127,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(PaymentApiController::class)->group(function () {
         Route::get('/payments', 'index')->name('api.payments.get');
         Route::post('/payments', 'store')->name('api.payments.store');
+    });
+
+
+    // // Permissions
+    Route::controller(PermissionApiController::class)->group(function () {
+        Route::get('/users/{user?}/permissions', 'user_permissions')->name('api.permissions.user');
     });
 
 });

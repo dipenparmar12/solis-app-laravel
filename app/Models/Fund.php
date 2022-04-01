@@ -23,7 +23,6 @@ class Fund extends Model
         'user_id', 'transaction_id', 'project_id',
         'amount', 'date',
         'status',
-        'pic',
     ];
 
     public const ORDERS_BY_ALLOWED = [

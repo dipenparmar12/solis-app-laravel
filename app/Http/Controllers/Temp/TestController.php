@@ -149,5 +149,19 @@ class TestController extends Controller
         }
         return abort(404, request('path'));
     }
+
+    public function remove_permissions(User $user)
+    {
+        // Reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        $permissions = explode(',', request('permissions'));
+        $permission_names = Permission::whereIn('id', $permissions)
+            ->get()->pluck('name');
+
+        foreach ($permission_names as $permission) {
+            $user->revokePermissionTo($permission);
+        }
+    }
 }
 
