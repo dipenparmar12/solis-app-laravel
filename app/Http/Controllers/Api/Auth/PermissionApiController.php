@@ -20,12 +20,28 @@ use function response;
  */
 class PermissionApiController extends Controller
 {
+//    /**
+//     * PermissionApiController constructor.
+//     */
+//    public function __construct()
+//    {
+////        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+//        $this->middleware('permission:role-list', ['only' => ['index', 'store']]);
+//        $this->middleware('permission:role-create', ['only' => ['create', 'store']]);
+//        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
+//        $this->middleware('permission:role-edit', ['only' => ['assign_roles']]);
+//
+//        $this->middleware('permission:permission-list', ['only' => ['index', 'show', 'assign_permissions']]);
+//        $this->middleware('permission:permission-show', ['only' => ['show']]);
+//        $this->middleware('permission:permission-edit', ['only' => ['edit', 'show', 'assign_permissions']]);
+//    }
+
     /**
      * @param Request $request
      * @param User $user
      * @return JsonResponse
      */
-    public function user_permissions(Request $request, User $user)
+    public function user_permissions(Request $request, User $user): JsonResponse
     {
         $permissions = Permission::select([
             // "*",
@@ -60,6 +76,22 @@ class PermissionApiController extends Controller
         return $this->res($data);
     }
 
+    public function assign(User $user)
+    {
+        request()->validate([
+            "permissions" => "array",
+            "permissions.*" => "string|required|exists:permissions,name",
+        ]);
+
+        if (request('permissions')) {
+            $user->syncPermissions(request('permissions'));
+        } else {
+            // remove all permissions, request('permissions') is_null
+            $user->syncPermissions();
+        }
+
+        return $this->res($user, "Permissions updated successfully ({$user->name}).");
+    }
 }
 
 //public function index(): JsonResponse

@@ -84,12 +84,11 @@ class DatabaseState
             // 'user-list-self' => 'user-list-self',
             // 'user-delete-all' => 'user-delete-all',
 
-            'Dashboard View' => 'dashboard-pivot',
-            'Dashboard For Project Expenses' => 'dashboard-project-expense',
-            'Dashboard For All Project Expenses' => 'dashboard-all-project-expense',
-
-            'Dashboard For User income-self' => 'dashboard-income-self',
-            'Dashboard For User income-all' => 'dashboard-income-all',
+//            'Dashboard View' => 'dashboard-pivot',
+//            'Dashboard For Project Expenses' => 'dashboard-project-expense',
+//            'Dashboard For All Project Expenses' => 'dashboard-all-project-expense',
+//            'Dashboard For User income-self' => 'dashboard-income-self',
+//            'Dashboard For User income-all' => 'dashboard-income-all',
 
             // 'Website image upload' => 'website_deprecated-image-upload',
             'Switch Account' => 'switch-account',

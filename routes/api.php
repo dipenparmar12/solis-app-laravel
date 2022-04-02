@@ -133,6 +133,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // // Permissions
     Route::controller(PermissionApiController::class)->group(function () {
         Route::get('/users/{user?}/permissions', 'user_permissions')->name('api.permissions.user');
+        Route::post('/users/{user?}/assign_permissions', 'assign')->name('api.permissions.assign');
     });
 
 });
