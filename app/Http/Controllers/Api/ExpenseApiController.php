@@ -76,7 +76,8 @@ class ExpenseApiController extends Controller
                 'amount', 'date',  'particular', 'category',
                 'project_id', 'dealer_id', 'transaction_id',
                 'desc',
-                // 'expense_by', 'is_approved',
+                // 'expense_b
+                //y', 'is_approved',
             ]));
 
             $record->expense_by = auth()->id();

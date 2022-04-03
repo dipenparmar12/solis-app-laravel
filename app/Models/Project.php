@@ -35,11 +35,13 @@ class Project extends Model
 
     /**
      * Project -> can have expenses
+     * TODO::IMP Change regarding dealer and project -> expense
      */
     public function expenses(): HasMany
     {
         return $this
-            ->hasMany(Expense::class, 'project_id', 'id');
+            ->hasMany(Expense::class, 'project_id', 'id')
+            ->whereNull('dealer_id');
     }
 
 

@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Support\Facades\Log;
+
 $modal = new Modal();
 
 /*
@@ -6,11 +9,10 @@ $modal = new Modal();
 ----- Laravel media
 -------------------
 */
-
-#______ Delete media
+# Delete media
 $modal->clearMediaCollection('estimates'); // default, estimates collection
 
-#______ Upload media from request
+# Upload media from request
 if (request()->hasFile('files')) {
     $files = reset(request()->files);
     $modal
@@ -25,6 +27,9 @@ if (request()->hasFile('files')) {
         });
 }
 
+/**
+ *
+ */
 #______ Eloquent transform
 
 $modal->transform(function ($item, $i) {
@@ -36,7 +41,12 @@ $modal->getCollection()->transform(function ($item) {
     return $item;
 });
 
-#______ Test
+
+/**
+ * Laravel permissions & role
+ */
+auth()->user()->hasPermissionTo('permission_name');
+
 #______ Test
 #______ Test
 #______ Test
@@ -55,3 +65,12 @@ class Modal {
 }
 
 
+
+try {
+
+} catch (Throwable $th) {
+    //throw $th;
+    $log_msg = ['Line:' => $th->getLine(), 'Message:' => $th->getMessage(), 'Code:' => $th->getCode()];
+    Log::error($log_msg);
+    return $this->resError($th->getMessage());
+}

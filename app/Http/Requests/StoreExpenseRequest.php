@@ -38,7 +38,7 @@ class StoreExpenseRequest extends FormRequest
     public function rules()
     {
         return [
-            'dealer_id' => 'nullable|required_if:category,project|exists:dealers,id',
+            'dealer_id' => 'nullable|exists:dealers,id',
             'project_id' => 'nullable|required_if:category,project|exists:projects,id', /// if Category is project then,
             'transaction_id' => 'required|exists:transactions,id',
 

@@ -38,9 +38,9 @@ class ProjectApiController extends Controller
             'projects.address',
         ])
             ->withSum(['incomes', 'expenses', 'estimates'], 'amount')
-//            ->when(!auth()->user()->hasPermissionTo('project-list-all'), function ($query) {
-//                return auth()->user()->hasPermissionTo('project-list-finish') ? $query->whereWip(0) : $query->whereWip(1);
-//            })
+            ->when(!auth()->user()->hasPermissionTo('project-list-all'), function ($query) {
+                return auth()->user()->hasPermissionTo('project-list-finish') ? $query->whereWip(0) : $query->whereWip(1);
+            })
             ->where(function ($qry) {
                 return $this->project_filters($qry);
             })
