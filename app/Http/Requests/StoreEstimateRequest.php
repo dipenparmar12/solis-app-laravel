@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Helpers;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreEstimateRequest extends FormRequest
@@ -13,14 +14,8 @@ class StoreEstimateRequest extends FormRequest
      */
     public function authorize()
     {
-        /**
-         * By default it returns false, change it to
-         * something like this if u are checking authentication
-         */
-        return auth()->check(); // <------------------
-//        return auth()->user()->hasPermissionTo('income-create');
-
-//        return false;
+        return Helpers::AuthHasPermission('estimate-create');
+        // return auth()->check() && auth()->user()->hasPermissionTo('estimate-create');
     }
 
     /**

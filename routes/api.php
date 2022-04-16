@@ -55,8 +55,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Funds
     Route::get('/funds', [FundApiController::class, 'index'])->name('api.funds.index');
     Route::post('/funds', [FundApiController::class, 'store'])->name('api.funds.store');
-//    Route::get('/funds/{fund}', [FundApiController::class, 'show'])->name('fapi.unds.show');
-//    Route::put('/funds/{funds}', [FundApiController::class, 'update'])->name('fapi.unds.update');
+    //    Route::get('/funds/{fund}', [FundApiController::class, 'show'])->name('fapi.unds.show');
+    //    Route::put('/funds/{funds}', [FundApiController::class, 'update'])->name('fapi.unds.update');
 
     // Users
     Route::get('/users', [UserApiController::class, 'index'])->name('users.index');
@@ -78,7 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects/{project}/expenses', [ProjectApiController::class, 'expenses'])->name('api.projects.expenses');
     Route::get('/projects/{project}/estimates', [ProjectApiController::class, 'estimates'])->name('api.projects.estimates');
     Route::get('/projects/{project}/incomes', [ProjectApiController::class, 'incomes'])->name('api.projects.incomes');
-//    Route::get('/projects/{project}', [ProjectApiController::class, 'show'])->name('projects.show');
+    //    Route::get('/projects/{project}', [ProjectApiController::class, 'show'])->name('projects.show');
 
     // Transactions
     Route::get('/transactions', [TransactionApiController::class, 'index'])->name('transactions.index');
@@ -132,10 +132,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // // Permissions
     Route::controller(PermissionApiController::class)->group(function () {
+        Route::post('/permissions', 'store')->name('api.permissions.store');
+
         Route::get('/users/{user?}/permissions', 'user_permissions')->name('api.permissions.user');
         Route::post('/users/{user?}/assign_permissions', 'assign')->name('api.permissions.assign');
     });
-
 });
 
 // Test routes

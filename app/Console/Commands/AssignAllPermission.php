@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -38,8 +39,7 @@ class AssignAllPermission extends Command
     public function handle()
     {
         try {
-            // reset cached roles and permissions
-            app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+            Helpers::flushPermissionCache();
 
             $user_id = $this->argument('user_id');
             $user = User::find($user_id);
@@ -51,6 +51,7 @@ class AssignAllPermission extends Command
             return 1;
         } catch (Throwable $th) {
             (config('app.env') === 'local') ? dd($th) : null;
+
             Log::error(/*"ERROR EmailSendJob:::",*/[
                 "ERROR_NAME:" => "Internal server error " . get_class($this) . "::::",
                 "LINE:" => $th->getLine(),

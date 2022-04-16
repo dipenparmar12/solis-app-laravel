@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Helpers;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePermissionRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,21 +22,21 @@ use function response;
  */
 class PermissionApiController extends Controller
 {
-//    /**
-//     * PermissionApiController constructor.
-//     */
-//    public function __construct()
-//    {
-////        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-//        $this->middleware('permission:role-list', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:role-create', ['only' => ['create', 'store']]);
-//        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
-//        $this->middleware('permission:role-edit', ['only' => ['assign_roles']]);
-//
-//        $this->middleware('permission:permission-list', ['only' => ['index', 'show', 'assign_permissions']]);
-//        $this->middleware('permission:permission-show', ['only' => ['show']]);
-//        $this->middleware('permission:permission-edit', ['only' => ['edit', 'show', 'assign_permissions']]);
-//    }
+    //    /**
+    //     * PermissionApiController constructor.
+    //     */
+    //    public function __construct()
+    //    {
+    ////        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+    //        $this->middleware('permission:role-list', ['only' => ['index', 'store']]);
+    //        $this->middleware('permission:role-create', ['only' => ['create', 'store']]);
+    //        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
+    //        $this->middleware('permission:role-edit', ['only' => ['assign_roles']]);
+    //
+    //        $this->middleware('permission:permission-list', ['only' => ['index', 'show', 'assign_permissions']]);
+    //        $this->middleware('permission:permission-show', ['only' => ['show']]);
+    //        $this->middleware('permission:permission-edit', ['only' => ['edit', 'show', 'assign_permissions']]);
+    //    }
 
     /**
      * @param Request $request
@@ -64,7 +66,7 @@ class PermissionApiController extends Controller
         $data = collect($user_permissions)
             ->merge($permissions)
             ->map(function ($item) {
-                $group = explode('-',$item['name'])[0];
+                $group = explode('-', $item['name'])[0];
                 $item['group'] = ucfirst($group);
                 return $item;
             })
@@ -91,6 +93,18 @@ class PermissionApiController extends Controller
         }
 
         return $this->res($user, "Permissions updated successfully ({$user->name}).");
+    }
+
+    public function store(StorePermissionRequest $request): JsonResponse
+    {
+        Helpers::flushPermissionCache();
+        $record = new Permission();
+        $record->name = request('name');
+        $record->display_name = request('display_name');
+        $record->guard_name = request('guard_name') ?? 'web';
+
+        $record->save();
+        return $this->res($record, 'Permission created successfully.');
     }
 }
 

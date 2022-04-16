@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Expense;
 use App\Models\Project;
@@ -37,9 +38,15 @@ class ProjectApiController extends Controller
             'projects.client',
             'projects.address',
         ])
-            ->withSum(['incomes', 'expenses', 'estimates'], 'amount')
-            ->when(!auth()->user()->hasPermissionTo('project-list-all'), function ($query) {
-                return auth()->user()->hasPermissionTo('project-list-finish') ? $query->whereWip(0) : $query->whereWip(1);
+            ->withSum([
+                'incomes',
+                'expenses',
+                'estimates',
+                // 'estimates' => fn ($qry) => $qry,
+            ], 'amount')
+
+            ->when(!Helpers::AuthHasPermission('project-list-all'), function ($query) {
+                return Helpers::AuthHasPermission('project-list-finish') ? $query->whereWip(0) : $query->whereWip(1);
             })
             ->where(function ($qry) {
                 return $this->project_filters($qry);
@@ -48,12 +55,28 @@ class ProjectApiController extends Controller
             ->paginate(request('per_page') ?? 50)
             ->appends(request()->all());
 
-//        $data->getCollection()->transform(function ($project) {
-//            $project->setAppends(['remaining_days']);
-//            return $project;
-//        });
-        // https://stackoverflow.com/questions/37102841/laravel-change-pagination-data/39342941#39342941
-        // https://stackoverflow.com/q/66938121/8592918
+        $data->getCollection()->transform(function ($project) {
+
+            $project['p_and_l'] = $project['budget'] - $project['estimates_sum_amount'] - $project['expenses_sum_amount'];
+            $project['collection'] = $project['budget'] - $project['incomes_sum_amount'];
+
+            if (!Helpers::AuthHasPermission('project-estimate-show')) {
+                $project['estimates_sum_amount'] = null;
+                $project['p_and_l'] = null;
+            }
+
+            if (!Helpers::AuthHasPermission('project-expense-show')) {
+                $project['expenses_sum_amount'] = null;
+                $project['p_and_l'] = null;
+            }
+
+            if (!Helpers::AuthHasPermission('project-income-show')) {
+                $project['incomes_sum_amount'] = null;
+                $project['collection'] = null;
+            }
+
+            return $project;
+        });
 
         return $this->res($data);
     }
@@ -134,11 +157,9 @@ class ProjectApiController extends Controller
             }
 
             return $this->resError($project, 'Please try again');
-
         } catch (Throwable $th) {
             return $this->resError($th->getMessage());
         }
-
     }
 
 
@@ -150,16 +171,16 @@ class ProjectApiController extends Controller
     public function expenses(Project $project): JsonResponse
     {
         try {
-
-            $project->load([
-                'expenses',
-                'expenses.expense_by_user',
-                'expenses.transaction',
-                'expenses.dealer',
-            ]);
+            if (Helpers::AuthHasPermission('project-expense-show')) {
+                $project->load([
+                    'expenses',
+                    'expenses.expense_by_user',
+                    'expenses.transaction',
+                    'expenses.dealer',
+                ]);
+            }
 
             return $this->res($project);
-
         } catch (Throwable $t) {
             return $this->resError(request()->all(), $t->getMessage());
         }
@@ -173,10 +194,13 @@ class ProjectApiController extends Controller
     public function estimates(Project $project): JsonResponse
     {
         try {
-            $project->load([
-                'estimates',
-                'estimates.dealer',
-            ]);
+
+            if (Helpers::AuthHasPermission('project-estimate-show')) {
+                $project->load([
+                    'estimates',
+                    'estimates.dealer',
+                ]);
+            }
             return $this->res($project);
         } catch (Throwable $t) {
             return $this->resError(request()->all(), $t->getMessage());
@@ -191,10 +215,12 @@ class ProjectApiController extends Controller
     public function incomes(Project $project): JsonResponse
     {
         try {
-            $project->load([
-                'incomes',
-                'incomes.received_by_user',
-            ]);
+            if (Helpers::AuthHasPermission('project-income-show')) {
+                $project->load([
+                    'incomes',
+                    'incomes.received_by_user',
+                ]);
+            }
             return $this->res($project);
         } catch (Throwable $t) {
             return $this->resError(request()->all(), $t->getMessage());
@@ -224,7 +250,6 @@ class ProjectApiController extends Controller
                 });
             });
     }
-
 }
 
 

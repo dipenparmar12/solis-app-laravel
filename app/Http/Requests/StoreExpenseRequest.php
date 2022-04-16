@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Helpers;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreExpenseRequest extends FormRequest
@@ -13,12 +14,7 @@ class StoreExpenseRequest extends FormRequest
      */
     public function authorize()
     {
-        /**
-         * By default it returns false, change it to
-         * something like this if u are checking authentication
-         */
-        return auth()->check(); // <------------------
-
+        return Helpers::AuthHasPermission('expense-create');
         /**
          * You could also use something more granular, like
          * a policy rule or an admin validation like this:
@@ -43,13 +39,13 @@ class StoreExpenseRequest extends FormRequest
             'transaction_id' => 'required|exists:transactions,id',
 
             'amount' => 'required|numeric|min:1|max:1000000',
-             // TODO::Expense Date should not be too much old (1,2 week max)
+            // TODO::Expense Date should not be too much old (1,2 week max)
             'date' => 'required|date|after:2010-01-01',  /*date_format:Y-m-d|*/  // before:tomorrow
             'particular' => 'required|string',
             'category' => 'required|string|in:project,office,personal,dealer,other',
             'is_approved' => 'nullable|boolean',
             'desc' => 'nullable|string|required_if:category,other,personal,office,dealer',
-//            'date' => 'required|date|before:tomorrow|after:2010-01-01',
+            //            'date' => 'required|date|before:tomorrow|after:2010-01-01',
 
         ];
     }

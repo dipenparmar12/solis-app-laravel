@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Helpers;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAdvanceRequest extends FormRequest
+class StorePermissionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,8 +14,8 @@ class StoreAdvanceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Helpers::AuthHasPermission('advance-create');
-        // return auth()->user()->hasPermissionTo('advance-create');
+        return Helpers::AuthHasPermission('permission-create');
+        // return auth()->user()->hasPermissionTo('permission-create');
     }
 
     /**
@@ -26,9 +26,9 @@ class StoreAdvanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
-            'advance_amount' => 'required|numeric|min:50|max:1000000',
-            'date' => 'required|date|before:tomorrow', /*date_format:Y-m-d|*/
+            'name' => 'required|string|unique:permissions,name',
+            'display_name' => 'required|string',
+            'guard_name' => 'nullable|in:web,sanctum,api',
         ];
     }
 }
