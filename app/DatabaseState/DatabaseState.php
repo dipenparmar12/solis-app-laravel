@@ -2,13 +2,22 @@
 
 namespace App\DatabaseState;
 
+use Spatie\Permission\PermissionRegistrar;
+
 class DatabaseState
 {
+    public function __construct()
+    {
+        // reset cached roles and permissions
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+    }
+
     /**
      * @return string[]
      */
     static public function permissions(): array
     {
+
         return [
             'Project +Add' => 'project-create',
             'Project View' => 'project-show',
@@ -22,6 +31,17 @@ class DatabaseState
             'Project Value Visible' => 'project-view-budget',
             'Project mark as completed' => 'project-mark-as-finish',
             // 'Project View Finished' => 'project-view-wip-0-project',
+
+
+            'Estimate Add' => 'estimate-create',
+//            'Estimate list-all' => 'estimate-list-all',
+//            'Estimate list-self' => 'estimate-list-self',
+//            'Estimate Delete Self' => 'estimate-delete-self',
+//            'Estimate Delete Any Entry' => 'estimate-delete-all',
+//            'Estimate edit' => 'estimate-edit',
+//            'Estimate edit-self' => 'estimate-edit-self',
+//             'Estimate edit-all' => 'estimate-edit-all',
+
 
             'PettyCash +Add ' => 'fund-create',
             'PettyCash List self' => 'fund-list-self',
@@ -60,10 +80,10 @@ class DatabaseState
             'Vendor Edit' => 'dealer-edit',
             'Vendor Delete' => 'dealer-delete',
 
-            'Payment Transaction create' => 'transaction-create',
-            'Payment Transaction list' => 'transaction-list',
-            'Payment Transaction edit' => 'transaction-edit',
-            'Payment Transaction delete' => 'transaction-delete',
+            'Transaction create' => 'transaction-create',
+            'Transaction list' => 'transaction-list',
+            'Transaction edit' => 'transaction-edit',
+            'Transaction delete' => 'transaction-delete',
 
             /// IMP
             'Role list' => 'role-list',
@@ -105,7 +125,7 @@ class DatabaseState
             'Salary edit all' => 'salary-edit-all',
             'Salary edit self' => 'salary-edit-self',
 
-            'Payment Add' => 'payment-list-all',
+            'Payment Add' => 'payment-create',
 //            'Payment list all' => 'payment-list-all',
 //            'Payment list self' => 'payment-list-self',
 //            'Payment View Self' => 'payment-show-self',
@@ -121,6 +141,8 @@ class DatabaseState
             // 'Advance edit all' => 'advance-edit-all',
             // 'Advance edit self' => 'advance-edit-self',
             // 'Advance delete self' => 'advance-delete-self',
+
+            "Debug" => 'debug'
         ];
     }
 }

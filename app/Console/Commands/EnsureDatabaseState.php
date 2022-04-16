@@ -23,7 +23,6 @@ class EnsureDatabaseState extends Command
      */
     protected $description = 'Update database static data (Permissions, etc) in production env';
 
-
     /**
      * Create a new command instance.
      *
@@ -41,6 +40,9 @@ class EnsureDatabaseState extends Command
      */
     public function handle(): int
     {
+        // reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
         $permissions_seed = (DatabaseState::permissions());
         foreach ($permissions_seed as $display_name => $permission) {
             $permission_exist = Permission::select(['name', 'display_name'])
