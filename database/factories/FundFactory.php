@@ -21,12 +21,12 @@ class FundFactory extends Factory
     {
         $date = $this->faker->dateTimeBetween($startDate = '-6 months', $endDate = 'now');
         return [
-            'user_id' => User::orderByRaw('RAND()')->first()->id,
-            'project_id' => $this->faker->randomElement([Project::orderByRaw('RAND()')->first()->id, null]),
-            'transaction_id' => Transaction::orderByRaw('RAND()')->first()->id,
+            'user_id' => User::inRandomOrder()->first()->id,
+            'project_id' => $this->faker->randomElement([Project::inRandomOrder()->first()->id, null]),
+            'transaction_id' => Transaction::inRandomOrder()->first()->id,
             'amount' => random_int(4500, 15000),
             'date' => $date,
-            'created_by' => User::orderByRaw('RAND()')->first()->id,
+            'created_by' => User::inRandomOrder()->first()->id,
             // 'is_approved' => 1,
         ];
     }

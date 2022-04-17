@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFundRequest;
 use App\Models\Fund;
@@ -33,11 +34,13 @@ class FundApiController extends Controller
     public function index(): JsonResponse
     {
 
-        $data = Fund::when(!auth()->user()->hasAnyPermission(['fund-list-all']), function ($qry) {
+        $data = Fund::when(!Helpers::AuthHasPermission(['fund-list-all']), function ($qry) {
             return $qry->where('user_id', auth()->id());
         })
-            ->with([
-                    'given_to', 'received_from', 'transaction']
+            ->with(
+                [
+                    'given_to', 'received_from', 'transaction'
+                ]
             )
             /* Filters */
             ->where(function ($qry) {
@@ -52,12 +55,12 @@ class FundApiController extends Controller
                     $user_ids = is_string($user_ids) ? explode(',', $user_ids) : $user_ids;
                     $qry->whereIn('funds.user_id', $user_ids);
                 });
-//                $qry->when(request('amount_min'), function ($query) {
-//                    $query->where('funds.amount', '>=', request('amount_min'));
-//                });
-//                $qry->when(request('amount_max'), function ($query) {
-//                    $query->where('funds.amount', '<=', request('amount_max'));
-//                });
+                //                $qry->when(request('amount_min'), function ($query) {
+                //                    $query->where('funds.amount', '>=', request('amount_min'));
+                //                });
+                //                $qry->when(request('amount_max'), function ($query) {
+                //                    $query->where('funds.amount', '<=', request('amount_max'));
+                //                });
             })
             /* Filters END */
             /* Dynamic Order By -amount->desc, amount->acs */
@@ -69,12 +72,11 @@ class FundApiController extends Controller
                     }
                 });
             })
-            ->orderBy('transaction_id' )
+            ->orderBy('transaction_id')
             ->paginate(QueryStrService::determinePerPageRows())
             ->appends(request()->all());
 
         return $this->res($data);
-
     }
 
     /**
@@ -111,7 +113,6 @@ class FundApiController extends Controller
             return $this->resError($e->getMessage());
         }
     }
-
 }
 
 

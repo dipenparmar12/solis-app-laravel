@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreIncomeRequest;
 use App\Http\Requests\UpdateIncomeRequest;
@@ -40,13 +41,13 @@ class IncomeApiController extends Controller
     {
         try {
             $incomes = Income::
-            // select([ '*', ])->
-            with([
-                'project', 'received_by_user', 'transaction'
-            ])
+                // select([ '*', ])->
+                with([
+                    'project', 'received_by_user', 'transaction'
+                ])
                 ->latest()
                 /* User Permission filter */
-                ->when(!auth()->user()->hasAnyPermission('income-list-all'), function ($qry) {
+                ->when(!Helpers::AuthHasPermission('income-list-all'), function ($qry) {
                     return $qry->where('incomes.user_id', auth()->id());
                 })
                 /* Dynamic Order By -amount=desc, amount=acs */
@@ -66,10 +67,10 @@ class IncomeApiController extends Controller
                 ->paginate(QueryStrService::determinePerPageRows())
                 ->appends(request()->all());
 
-//            $incomes->getCollection()->transform(function ($item) {
-//                $item->subRows = $item->emi_info;
-//                return $item;
-//            });
+            //            $incomes->getCollection()->transform(function ($item) {
+            //                $item->subRows = $item->emi_info;
+            //                return $item;
+            //            });
 
             return $this->res($incomes, 'Income resource.');
         } catch (Throwable $t) {
@@ -87,7 +88,7 @@ class IncomeApiController extends Controller
     {
         try {
             $income = Income::create(request()->only([
-               // "received_by",
+                // "received_by",
                 "project_id", "transaction_id",
                 "from", "amount", "date",
                 'particular', 'desc',
@@ -110,7 +111,6 @@ class IncomeApiController extends Controller
             }
 
             return $this->res($income, 'Income created successfully.');
-
         } catch (Throwable $t) {
             DB::rollBack();
             $error_msg = ['Line:' => $t->getLine(), 'Message:' => $t->getMessage(), 'Code:' => $t->getCode()];
@@ -126,9 +126,9 @@ class IncomeApiController extends Controller
      */
     public function show(Income $income)
     {
-//        $income->load([
-//            'project', 'received_by_user', 'transaction'
-//        ]);
+        //        $income->load([
+        //            'project', 'received_by_user', 'transaction'
+        //        ]);
         $mediaItems = $income->getMedia();
         return $income;
     }
@@ -157,38 +157,38 @@ class IncomeApiController extends Controller
             });
     }
 
-//
-//    /**
-//     * Show the form for editing the specified resource.
-//     *
-//     * @param  \App\Models\Income  $income
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function edit(Income $income)
-//    {
-//        //
-//    }
-//
-//    /**
-//     * Update the specified resource in storage.
-//     *
-//     * @param  \App\Http\Requests\UpdateIncomeRequest  $request
-//     * @param  \App\Models\Income  $income
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function update(UpdateIncomeRequest $request, Income $income)
-//    {
-//        //
-//    }
-//
-//    /**
-//     * Remove the specified resource from storage.
-//     *
-//     * @param  \App\Models\Income  $income
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function destroy(Income $income)
-//    {
-//        //
-//    }
+    //
+    //    /**
+    //     * Show the form for editing the specified resource.
+    //     *
+    //     * @param  \App\Models\Income  $income
+    //     * @return \Illuminate\Http\Response
+    //     */
+    //    public function edit(Income $income)
+    //    {
+    //        //
+    //    }
+    //
+    //    /**
+    //     * Update the specified resource in storage.
+    //     *
+    //     * @param  \App\Http\Requests\UpdateIncomeRequest  $request
+    //     * @param  \App\Models\Income  $income
+    //     * @return \Illuminate\Http\Response
+    //     */
+    //    public function update(UpdateIncomeRequest $request, Income $income)
+    //    {
+    //        //
+    //    }
+    //
+    //    /**
+    //     * Remove the specified resource from storage.
+    //     *
+    //     * @param  \App\Models\Income  $income
+    //     * @return \Illuminate\Http\Response
+    //     */
+    //    public function destroy(Income $income)
+    //    {
+    //        //
+    //    }
 }

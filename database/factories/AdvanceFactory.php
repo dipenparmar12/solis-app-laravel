@@ -16,11 +16,11 @@ class AdvanceFactory extends Factory
     {
         $date = $this->faker->dateTimeBetween($startDate = '-12 months', $endDate = 'now');
         return [
-            'user_id' => User::orderByRaw('RAND()')->first()->id,
+            'user_id' => User::inRandomOrder()->first()->id,
             'amount' => $this->faker->numberBetween(1000, 25000),
             'date' => $date,
             'settled' => $this->faker->boolean(),
-            'created_by' => User::orderByRaw('RAND()')->first()->id,
+            'created_by' => User::inRandomOrder()->first()->id,
         ];
     }
 }

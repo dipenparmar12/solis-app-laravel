@@ -23,9 +23,9 @@ class IncomeFactory extends Factory
 
         $date = $this->faker->dateTimeBetween($startDate = '-12 months', $endDate = 'now');
         return [
-            'received_by' => User::orderByRaw('RAND()')->first()->id,
-            'project_id' => Project::orderByRaw('RAND()')->first()->id,
-            'transaction_id' => Transaction::orderByRaw('RAND()')->first()->id,
+            'received_by' => User::inRandomOrder()->first()->id,
+            'project_id' => Project::inRandomOrder()->first()->id ?? 1,
+            'transaction_id' => Transaction::inRandomOrder()->first()->id ?? 1,
 
             'from' => $this->faker->firstName(),
             'amount' => $this->faker->randomElement(
@@ -35,7 +35,7 @@ class IncomeFactory extends Factory
             'particular' => $this->faker->randomElement(['Booking', 'reminding', 'partial']) . " amount received",
             'desc' => $this->faker->paragraph(2),
 
-            'created_by' => User::orderByRaw('RAND()')->first()->id,
+            'created_by' => User::inRandomOrder()->first()->id,
         ];
     }
 }

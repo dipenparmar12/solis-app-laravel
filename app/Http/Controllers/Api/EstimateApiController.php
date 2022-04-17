@@ -16,6 +16,13 @@ use Throwable;
 
 class EstimateApiController extends Controller
 {
+
+    public function __construct()
+    {
+        //    $this->middleware(['role:team']);
+        $this->middleware('permission:estimate-list-all|estimate-list-self', ['only' => ['index',]]);
+    }
+
     /**
      * Display a listing of the resource.
      * TODO:IMP remove media fields columns
@@ -25,23 +32,17 @@ class EstimateApiController extends Controller
     {
         try {
             $estimates = Estimate::
-            // select([ '*', ])->
-            with([
-                'project', 'dealer', 'media'
-            ])->
-            latest()
+                // select([ '*', ])->
+                with([
+                    'project', 'dealer', 'media'
+                ])->latest()
                 ->paginate(QueryStrService::determinePerPageRows())
                 ->appends(request()->all());
-
-//           $estimates = $estimates->getCollection()->transform(function ($item) {
-//                return $item;
-//            });
 
             return $this->res($estimates, 'Dealers resource.');
         } catch (Throwable $t) {
             return $this->resError(request()->all(), $t->getMessage());
         }
-
     }
 
     /**
@@ -53,7 +54,7 @@ class EstimateApiController extends Controller
     public function store(StoreEstimateRequest $request)
     {
         try {
-//            return request()->all();
+            //            return request()->all();
             $groupId = Str::random(7);
             $estimates = collect(json_decode(request('estimates'), true));
 
@@ -96,59 +97,59 @@ class EstimateApiController extends Controller
         }
     }
 
-//    /**
-//     * Show the form for creating a new resource.
-//     *desc = 'Desc'
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function create()
-//    {
-//        //
-//    }
-//
-//
-//    /**
-//     * Display the specified resource.
-//     *
-//     * @param  \App\Models\Estimate  $estimate
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function show(Estimate $estimate)
-//    {
-//        //
-//    }
-//
-//    /**
-//     * Show the form for editing the specified resource.
-//     *
-//     * @param  \App\Models\Estimate  $estimate
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function edit(Estimate $estimate)
-//    {
-//        //
-//    }
-//
-//    /**
-//     * Update the specified resource in storage.
-//     *
-//     * @param  \App\Http\Requests\UpdateEstimateRequest  $request
-//     * @param  \App\Models\Estimate  $estimate
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function update(UpdateEstimateRequest $request, Estimate $estimate)
-//    {
-//        //
-//    }
-//
-//    /**
-//     * Remove the specified resource from storage.
-//     *
-//     * @param  \App\Models\Estimate  $estimate
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function destroy(Estimate $estimate)
-//    {
-//        //
-//    }
+    //    /**
+    //     * Show the form for creating a new resource.
+    //     *desc = 'Desc'
+    //     * @return \Illuminate\Http\Response
+    //     */
+    //    public function create()
+    //    {
+    //        //
+    //    }
+    //
+    //
+    //    /**
+    //     * Display the specified resource.
+    //     *
+    //     * @param  \App\Models\Estimate  $estimate
+    //     * @return \Illuminate\Http\Response
+    //     */
+    //    public function show(Estimate $estimate)
+    //    {
+    //        //
+    //    }
+    //
+    //    /**
+    //     * Show the form for editing the specified resource.
+    //     *
+    //     * @param  \App\Models\Estimate  $estimate
+    //     * @return \Illuminate\Http\Response
+    //     */
+    //    public function edit(Estimate $estimate)
+    //    {
+    //        //
+    //    }
+    //
+    //    /**
+    //     * Update the specified resource in storage.
+    //     *
+    //     * @param  \App\Http\Requests\UpdateEstimateRequest  $request
+    //     * @param  \App\Models\Estimate  $estimate
+    //     * @return \Illuminate\Http\Response
+    //     */
+    //    public function update(UpdateEstimateRequest $request, Estimate $estimate)
+    //    {
+    //        //
+    //    }
+    //
+    //    /**
+    //     * Remove the specified resource from storage.
+    //     *
+    //     * @param  \App\Models\Estimate  $estimate
+    //     * @return \Illuminate\Http\Response
+    //     */
+    //    public function destroy(Estimate $estimate)
+    //    {
+    //        //
+    //    }
 }
