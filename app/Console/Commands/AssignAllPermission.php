@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Helpers;
+use App\Helper;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -39,7 +39,7 @@ class AssignAllPermission extends Command
     public function handle()
     {
         try {
-            Helpers::flushPermissionCache();
+            Helper::flushPermissionCache();
 
             $user_id = $this->argument('user_id');
             $user = User::find($user_id);

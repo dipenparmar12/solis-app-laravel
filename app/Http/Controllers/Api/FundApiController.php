@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helpers;
+use App\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFundRequest;
 use App\Models\Fund;
@@ -34,14 +34,12 @@ class FundApiController extends Controller
     public function index(): JsonResponse
     {
 
-        $data = Fund::when(!Helpers::AuthHasPermission(['fund-list-all']), function ($qry) {
+        $data = Fund::when(!Helper::AuthHasPermission('fund-list-all'), function ($qry) {
             return $qry->where('user_id', auth()->id());
         })
-            ->with(
-                [
-                    'given_to', 'received_from', 'transaction'
-                ]
-            )
+            ->with([
+                'given_to', 'received_from', 'transaction'
+            ])
             /* Filters */
             ->where(function ($qry) {
                 $qry->when(request('from_date'), function ($qry) {
@@ -91,7 +89,6 @@ class FundApiController extends Controller
         try {
             $fund = new Fund();
             DB::transaction(function () use ($fund) {
-
                 $fund->user_id = request('user_id');
                 $fund->amount = request('amount');
                 $fund->date = request('date');

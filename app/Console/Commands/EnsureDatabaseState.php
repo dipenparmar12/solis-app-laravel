@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\DatabaseState\DatabaseState;
-use App\Helpers;
+use App\Helper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;
@@ -41,7 +41,7 @@ class EnsureDatabaseState extends Command
      */
     public function handle(): int
     {
-        Helpers::flushPermissionCache();
+        Helper::flushPermissionCache();
 
         $permissions_seed = (DatabaseState::permissions());
         foreach ($permissions_seed as $display_name => $permission) {

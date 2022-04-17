@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Helpers;
+use App\Helper;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreEstimateRequest extends FormRequest
@@ -14,7 +14,7 @@ class StoreEstimateRequest extends FormRequest
      */
     public function authorize()
     {
-        return Helpers::AuthHasPermission('estimate-create');
+        return Helper::AuthHasPermission('estimate-create');
         // return auth()->check() && auth()->user()->hasPermissionTo('estimate-create');
     }
 

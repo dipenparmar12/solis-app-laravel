@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helpers;
+use App\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreIncomeRequest;
 use App\Http\Requests\UpdateIncomeRequest;
@@ -47,7 +47,7 @@ class IncomeApiController extends Controller
                 ])
                 ->latest()
                 /* User Permission filter */
-                ->when(!Helpers::AuthHasPermission('income-list-all'), function ($qry) {
+                ->when(!Helper::AuthHasPermission('income-list-all'), function ($qry) {
                     return $qry->where('incomes.user_id', auth()->id());
                 })
                 /* Dynamic Order By -amount=desc, amount=acs */

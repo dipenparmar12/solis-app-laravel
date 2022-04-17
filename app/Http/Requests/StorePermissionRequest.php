@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Helpers;
+use App\Helper;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePermissionRequest extends FormRequest
@@ -14,7 +14,7 @@ class StorePermissionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Helpers::AuthHasPermission('permission-create');
+        return Helper::AuthHasPermission('permission-create');
         // return auth()->user()->hasPermissionTo('permission-create');
     }
 

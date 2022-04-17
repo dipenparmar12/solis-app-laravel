@@ -2,7 +2,7 @@
 
 namespace App;
 
-class Helpers
+class Helper
 {
   public static function AuthHasPermission($permissionName)
   {

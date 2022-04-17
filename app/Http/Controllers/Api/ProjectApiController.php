@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helpers;
+use App\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Expense;
 use App\Models\Project;
@@ -45,8 +45,8 @@ class ProjectApiController extends Controller
                 // 'estimates' => fn ($qry) => $qry,
             ], 'amount')
 
-            ->when(!Helpers::AuthHasPermission('project-list-all'), function ($query) {
-                return Helpers::AuthHasPermission('project-list-finish') ? $query->whereWip(0) : $query->whereWip(1);
+            ->when(!Helper::AuthHasPermission('project-list-all'), function ($query) {
+                return Helper::AuthHasPermission('project-list-finish') ? $query->whereWip(0) : $query->whereWip(1);
             })
             ->where(function ($qry) {
                 return $this->project_filters($qry);
@@ -60,17 +60,17 @@ class ProjectApiController extends Controller
             $project['p_and_l'] = $project['budget'] - $project['estimates_sum_amount'] - $project['expenses_sum_amount'];
             $project['collection'] = $project['budget'] - $project['incomes_sum_amount'];
 
-            if (!Helpers::AuthHasPermission('project-estimate-show')) {
+            if (!Helper::AuthHasPermission('project-estimate-show')) {
                 $project['estimates_sum_amount'] = null;
                 $project['p_and_l'] = null;
             }
 
-            if (!Helpers::AuthHasPermission('project-expense-show')) {
+            if (!Helper::AuthHasPermission('project-expense-show')) {
                 $project['expenses_sum_amount'] = null;
                 $project['p_and_l'] = null;
             }
 
-            if (!Helpers::AuthHasPermission('project-income-show')) {
+            if (!Helper::AuthHasPermission('project-income-show')) {
                 $project['incomes_sum_amount'] = null;
                 $project['collection'] = null;
             }
@@ -171,7 +171,7 @@ class ProjectApiController extends Controller
     public function expenses(Project $project): JsonResponse
     {
         try {
-            if (Helpers::AuthHasPermission('project-expense-show')) {
+            if (Helper::AuthHasPermission('project-expense-show')) {
                 $project->load([
                     'expenses',
                     'expenses.expense_by_user',
@@ -195,7 +195,7 @@ class ProjectApiController extends Controller
     {
         try {
 
-            if (Helpers::AuthHasPermission('project-estimate-show')) {
+            if (Helper::AuthHasPermission('project-estimate-show')) {
                 $project->load([
                     'estimates',
                     'estimates.dealer',
@@ -215,7 +215,7 @@ class ProjectApiController extends Controller
     public function incomes(Project $project): JsonResponse
     {
         try {
-            if (Helpers::AuthHasPermission('project-income-show')) {
+            if (Helper::AuthHasPermission('project-income-show')) {
                 $project->load([
                     'incomes',
                     'incomes.received_by_user',

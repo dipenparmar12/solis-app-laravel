@@ -50,9 +50,9 @@ class DatabaseState
             'PettyCash Add ' => 'fund-create',
             'PettyCash List self' => 'fund-list-self',
             'PettyCash List All ' => 'fund-list-all',
-            'PettyCash View only Self' => 'fund-show-self',
-            'PettyCash Delete Self' => 'fund-delete-self',
-            'PettyCash Delete Any Entry' => 'fund-delete-all', // Not Updated in Solis-interiors.in
+            // 'PettyCash View only Self' => 'fund-show-self',
+            // 'PettyCash Delete Self' => 'fund-delete-self',
+            // 'PettyCash Delete Any Entry' => 'fund-delete-all', // Not Updated in Solis-interiors.in
             // 'PettyCash View All Entry of' => 'fund-show-all',
             // 'PettyCash Change' => 'fund-edit-self',
             // 'PettyCash Change' => 'fund-edit-all',

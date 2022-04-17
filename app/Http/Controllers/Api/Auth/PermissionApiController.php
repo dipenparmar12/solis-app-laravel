@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Helpers;
+use App\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePermissionRequest;
 use App\Models\User;
@@ -97,7 +97,7 @@ class PermissionApiController extends Controller
 
     public function store(StorePermissionRequest $request): JsonResponse
     {
-        Helpers::flushPermissionCache();
+        Helper::flushPermissionCache();
         $record = new Permission();
         $record->name = request('name');
         $record->display_name = request('display_name');

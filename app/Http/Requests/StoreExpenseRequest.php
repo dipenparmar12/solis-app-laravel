@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Helpers;
+use App\Helper;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreExpenseRequest extends FormRequest
@@ -14,7 +14,7 @@ class StoreExpenseRequest extends FormRequest
      */
     public function authorize()
     {
-        return Helpers::AuthHasPermission('expense-create');
+        return Helper::AuthHasPermission('expense-create');
         /**
          * You could also use something more granular, like
          * a policy rule or an admin validation like this:

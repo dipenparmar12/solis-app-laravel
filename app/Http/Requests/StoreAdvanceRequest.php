@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Helpers;
+use App\Helper;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAdvanceRequest extends FormRequest
@@ -14,7 +14,7 @@ class StoreAdvanceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Helpers::AuthHasPermission('advance-create');
+        return Helper::AuthHasPermission('advance-create');
         // return auth()->user()->hasPermissionTo('advance-create');
     }
 
