@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Storage;
 */
 
 Route::get('/', function () {
-    return "test2";
+    return "test3";
     return view('welcome');
 });
 
