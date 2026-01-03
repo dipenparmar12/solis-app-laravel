@@ -331,7 +331,7 @@ docker restart solis-mysql    # Restart if needed
 ```
 
 ### Issue: "Deprecated: Constant PDO::MYSQL_ATTR_SSL_CA"
-**Status**: Already fixed in the provided configuration
+**Status**: Fixed by using integer value `1012` in `config/database.php` to avoid deprecation warning in PHP 8.5+
 
 ### Issue: "Class not found"
 **Solution**: Clear the autoloader cache
